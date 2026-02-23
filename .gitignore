@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+
+.venv/
+.pytest_cache/
+
+.DS_Store
+
+# Local deployment env (contains machine-specific values / contact info)
+.env.weather-bot
+

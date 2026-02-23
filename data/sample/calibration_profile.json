@@ -1,0 +1,11 @@
+{
+  "bin_adjustments": {},
+  "meta": {
+    "min_bin_samples": 8,
+    "restrict_status": null,
+    "rows_labeled": 0,
+    "rows_total": 780,
+    "shrinkage_n": 25
+  },
+  "schema_version": 1
+}

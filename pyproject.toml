@@ -1,0 +1,8 @@
+[project]
+name = "weather-polymarket-bot"
+version = "0.1.0"
+description = "Phase 1 research and paper-trading scaffold for a weather prediction market bot"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

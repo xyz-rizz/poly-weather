@@ -1,0 +1,39 @@
+{
+  "by_city": {},
+  "by_horizon": {},
+  "by_status": {},
+  "overall": {
+    "calibrated": {
+      "brier": null,
+      "ece": null,
+      "hit_rate": null,
+      "log_loss": null,
+      "mean_obs": null,
+      "mean_pred": null,
+      "n": 0
+    },
+    "delta": {
+      "brier": null,
+      "ece": null,
+      "log_loss": null
+    },
+    "raw": {
+      "brier": null,
+      "ece": null,
+      "hit_rate": null,
+      "log_loss": null,
+      "mean_obs": null,
+      "mean_pred": null,
+      "n": 0
+    }
+  },
+  "profile_hit_examples": [],
+  "summary": {
+    "profile_bins": 0,
+    "profile_hit_count": 0,
+    "profile_loaded": true,
+    "restrict_status": null,
+    "rows_labeled": 0,
+    "rows_total": 780
+  }
+}

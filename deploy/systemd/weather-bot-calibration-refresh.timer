@@ -1,0 +1,13 @@
+[Unit]
+Description=Run Weather Bot Calibration Refresh Daily
+
+[Timer]
+OnBootSec=10m
+OnUnitActiveSec=24h
+AccuracySec=5m
+Persistent=true
+Unit=weather-bot-calibration-refresh.service
+
+[Install]
+WantedBy=timers.target
+
