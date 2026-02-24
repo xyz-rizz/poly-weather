@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-24T10:01:07.248610+00:00",
+  "as_of_utc": "2026-02-24T10:31:09.297176+00:00",
   "closed_market_ids": [
     "1407218",
     "1407238",
@@ -33,7 +33,7 @@
       "market_id": "1413709",
       "original_size_usd": 5.0,
       "partial_tp_taken": false,
-      "peak_mark_return_pct": -0.08593750000000007,
+      "peak_mark_return_pct": -0.07812500000000007,
       "signal_time_utc": "2026-02-23T23:57:48.809885+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
