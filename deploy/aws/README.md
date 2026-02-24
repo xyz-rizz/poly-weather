@@ -9,7 +9,8 @@ Recommended rollout order:
 3. `daily calibration refresh` fallback (optional)
 4. `git autosave` (optional, every 30 min)
 5. `monitoring/alerts`
-6. only later: live execution (not included yet)
+6. `shadow live execution` (intent logging only, no real orders)
+7. only later: real live execution
 
 ## Recommended Instance (AWS)
 
@@ -164,6 +165,23 @@ Notes:
 - `data/sample/paper_performance_report.json`
 
 `paper_performance_report.json` now includes breakdowns by `exit_reason`, `city`, `direction`, `entry_horizon`, and `exit_regime`, plus simple tuning-candidate suggestions based on realized paper trades.
+
+## Shadow Live Execution (No Real Orders)
+
+The project now includes a `shadow-submit` execution scaffold that:
+- builds live order intents from accepted opportunities
+- enforces kill-switch guards (paper performance, stale scan age, exposure)
+- logs intended orders to `data/sample/live_execution_attempts.jsonl`
+- **does not submit real orders**
+
+Enable in `.env.weather-bot`:
+
+```bash
+WEATHER_BOT_EXECUTION_MODE=shadow_submit
+WEATHER_BOT_EXEC_ALLOW=1
+```
+
+Keep `WEATHER_BOT_EXEC_ALLOW=0` unless you intentionally want the VPS to produce shadow execution intent logs.
 
 ## Security Notes (Important)
 

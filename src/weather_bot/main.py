@@ -23,6 +23,7 @@ from weather_bot.core.exits import latest_yes_mid_from_evaluations, plan_shadow_
 from weather_bot.core.pipeline import WeatherScanPipeline
 from weather_bot.core.risk import RiskEngine, portfolio_summary
 from weather_bot.core.universe import get_universe
+from weather_bot.execution import run_shadow_live_execution
 from weather_bot.simulation.paper_journal import write_signal_event
 from weather_bot.simulation.portfolio_state import (
     append_plan_log,
@@ -164,6 +165,21 @@ def main() -> int:
         print(f"Plan log: {plan_log_path}")
         print(f"Portfolio state: {state_path}")
         print(f"Portfolio summary: {portfolio_summary(next_state)}")
+
+    exec_mode = os.getenv("WEATHER_BOT_EXECUTION_MODE", "off").strip().lower()
+    if exec_mode == "shadow_submit":
+        exec_state = run_shadow_live_execution(
+            opportunities=result.opportunities,
+            scan_time_utc=result.scanned_at_utc,
+            cfg=cfg,
+            mode=mode,
+        )
+        print(
+            "Shadow live execution attempts="
+            f"{exec_state.get('attempts_this_scan')} accepted={exec_state.get('accepted_shadow_submits_this_scan')} "
+            f"guard={((exec_state.get('guard') or {}).get('reason'))}"
+        )
+        print(f"Exec state: {os.getenv('WEATHER_BOT_EXEC_STATE_PATH', 'data/sample/live_execution_state.json')}")
 
     if os.getenv("WEATHER_BOT_SHADOW_EXITS", "0").strip().lower() in {"1", "true", "yes"}:
         state_path = Path(os.getenv("WEATHER_BOT_PORTFOLIO_STATE_PATH", "data/sample/portfolio_state.json"))
