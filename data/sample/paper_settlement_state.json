@@ -1,7 +1,10 @@
 {
-  "as_of_utc": "2026-02-24T06:25:07.959191+00:00",
+  "as_of_utc": "2026-02-24T06:55:46.558721+00:00",
   "closed_market_ids": [
-    "1407218"
+    "1407218",
+    "1413700",
+    "1413702",
+    "1413715"
   ],
   "open_positions": [
     {
@@ -14,17 +17,6 @@
       "size_usd": 5.0,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-24T09:00:00+00:00"
-    },
-    {
-      "city": "Atlanta",
-      "direction": "BUY_YES",
-      "entry_price": 0.006,
-      "event_slug": "highest-temperature-in-atlanta-on-february-24-2026",
-      "market_id": "1413715",
-      "signal_time_utc": "2026-02-23T12:46:54.139817+00:00",
-      "size_usd": 5.0,
-      "source_event_type": "signal",
-      "target_time_utc": "2026-02-24T12:00:00+00:00"
     },
     {
       "city": "Atlanta",
@@ -61,28 +53,6 @@
     },
     {
       "city": "NYC",
-      "direction": "BUY_NO",
-      "entry_price": 0.6699999999999999,
-      "event_slug": "highest-temperature-in-nyc-on-february-24-2026",
-      "market_id": "1413700",
-      "signal_time_utc": "2026-02-23T18:22:47.498049+00:00",
-      "size_usd": 5.0,
-      "source_event_type": "signal",
-      "target_time_utc": "2026-02-24T12:00:00+00:00"
-    },
-    {
-      "city": "NYC",
-      "direction": "BUY_YES",
-      "entry_price": 0.139,
-      "event_slug": "highest-temperature-in-nyc-on-february-24-2026",
-      "market_id": "1413702",
-      "signal_time_utc": "2026-02-23T19:57:43.506773+00:00",
-      "size_usd": 5.0,
-      "source_event_type": "signal",
-      "target_time_utc": "2026-02-24T12:00:00+00:00"
-    },
-    {
-      "city": "NYC",
       "direction": "BUY_YES",
       "entry_price": 0.01,
       "event_slug": "highest-temperature-in-nyc-on-february-24-2026",
@@ -102,8 +72,19 @@
       "size_usd": 5.0,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-24T12:00:00+00:00"
+    },
+    {
+      "city": "Dallas",
+      "direction": "BUY_NO",
+      "entry_price": 0.5700000000000001,
+      "event_slug": "highest-temperature-in-dallas-on-february-24-2026",
+      "market_id": "1413708",
+      "signal_time_utc": "2026-02-24T06:52:03.837206+00:00",
+      "size_usd": 5.0,
+      "source_event_type": "signal",
+      "target_time_utc": "2026-02-24T12:00:00+00:00"
     }
   ],
-  "realized_pnl_usd": 5.638297872340425,
+  "realized_pnl_usd": -3.302340661608536,
   "settled_trades": 1
 }
