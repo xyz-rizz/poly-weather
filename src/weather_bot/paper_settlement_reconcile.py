@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import os
 from dataclasses import asdict, dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -57,6 +57,7 @@ class PaperSignalPosition:
     size_usd: float
     entry_price: float
     signal_time_utc: datetime
+    target_time_utc: datetime | None = None
     source_event_type: str = "signal"
 
 
@@ -91,6 +92,7 @@ def load_state(path: Path) -> PaperSettlementState:
                     size_usd=float(row.get("size_usd") or 0.0),
                     entry_price=float(row.get("entry_price") or 0.5),
                     signal_time_utc=dt,
+                    target_time_utc=_parse_dt(row.get("target_time_utc")),
                     source_event_type=str(row.get("source_event_type") or "signal"),
                 )
             )
@@ -152,11 +154,146 @@ def _append_ledger_rows(path: Path, rows: list[dict[str, Any]]) -> None:
             fh.write(json.dumps(_serialize(row), separators=(",", ":")) + "\n")
 
 
+def _as_float(value: Any) -> float | None:
+    try:
+        return None if value is None else float(value)
+    except Exception:
+        return None
+
+
+def _latest_mark_rows_from_feature_export(path: Path) -> dict[str, dict[str, Any]]:
+    rows = _read_jsonl(path)
+    latest: dict[str, dict[str, Any]] = {}
+    latest_ts: dict[str, datetime] = {}
+    for row in rows:
+        market_id = str(row.get("market_id") or "")
+        if not market_id:
+            continue
+        quote_ts = _parse_dt(row.get("quote_time_utc"))
+        snap_ts = _parse_dt(row.get("snapshot_time_utc"))
+        ts = quote_ts or snap_ts
+        if ts is None:
+            continue
+        prev_ts = latest_ts.get(market_id)
+        if prev_ts is None or ts > prev_ts:
+            latest_ts[market_id] = ts
+            latest[market_id] = row
+    return latest
+
+
+def _latest_mark_rows_from_scan_snapshots(path: Path) -> dict[str, dict[str, Any]]:
+    rows = _read_jsonl(path)
+    latest: dict[str, dict[str, Any]] = {}
+    latest_ts: dict[str, datetime] = {}
+    for row in rows:
+        if row.get("event_type") != "scan_snapshot":
+            continue
+        scan_result = row.get("scan_result") or {}
+        features = scan_result.get("feature_rows") or []
+        scanned_at = _parse_dt(scan_result.get("scanned_at_utc") or row.get("created_at_utc"))
+        for fr in features:
+            if not isinstance(fr, dict):
+                continue
+            market_id = str(fr.get("market_id") or "")
+            if not market_id:
+                continue
+            ts = _parse_dt(fr.get("quote_time_utc")) or scanned_at
+            if ts is None:
+                continue
+            prev_ts = latest_ts.get(market_id)
+            if prev_ts is None or ts > prev_ts:
+                latest_ts[market_id] = ts
+                latest[market_id] = fr
+    return latest
+
+
+def _load_latest_mark_rows(base_dir: Path) -> tuple[dict[str, dict[str, Any]], str]:
+    feature_path = Path(os.getenv("WEATHER_BOT_FEATURE_EXPORT_PATH", str(base_dir / "feature_rows_export.jsonl")))
+    if feature_path.exists():
+        rows = _latest_mark_rows_from_feature_export(feature_path)
+        if rows:
+            return rows, str(feature_path)
+    scan_path = Path(os.getenv("WEATHER_BOT_SCAN_RECORD_PATH", str(base_dir / "scan_snapshots.jsonl")))
+    return _latest_mark_rows_from_scan_snapshots(scan_path), str(scan_path)
+
+
+def _mark_exit_price_and_reason(
+    pos: PaperSignalPosition,
+    mark_row: dict[str, Any],
+    *,
+    now_utc: datetime,
+    mark_fresh_seconds: float,
+    take_profit_pct: float,
+    stop_loss_pct: float,
+    time_stop_grace_seconds: float,
+) -> tuple[float, str, float, float] | None:
+    quote_ts = _parse_dt(mark_row.get("quote_time_utc")) or _parse_dt(mark_row.get("snapshot_time_utc"))
+    if quote_ts is None:
+        return None
+    age_sec = max(0.0, (now_utc - quote_ts).total_seconds())
+    if age_sec > mark_fresh_seconds:
+        return None
+
+    implied_mid = _as_float(mark_row.get("implied_yes_mid"))
+    yes_bid = _as_float(mark_row.get("yes_bid"))
+    yes_ask = _as_float(mark_row.get("yes_ask"))
+    no_bid = _as_float(mark_row.get("no_bid"))
+    no_ask = _as_float(mark_row.get("no_ask"))
+
+    mark_yes = implied_mid
+    if mark_yes is None and yes_bid is not None and yes_ask is not None:
+        mark_yes = (yes_bid + yes_ask) / 2.0
+    if mark_yes is None:
+        return None
+    mark_yes = max(0.001, min(0.999, mark_yes))
+
+    if pos.direction == "BUY_YES":
+        mark_pos = mark_yes
+        exit_fill = yes_bid if yes_bid is not None else mark_yes
+    else:
+        mark_pos = 1.0 - mark_yes
+        exit_fill = no_bid if no_bid is not None else (1.0 - mark_yes)
+    exit_fill = max(0.001, min(0.999, exit_fill))
+
+    ret = (mark_pos - pos.entry_price) / max(pos.entry_price, 1e-9)
+    shares = pos.size_usd / max(pos.entry_price, 1e-9)
+    unrealized_pnl = shares * (mark_pos - pos.entry_price)
+
+    reason = None
+    if ret >= take_profit_pct:
+        reason = "take_profit"
+    elif ret <= -abs(stop_loss_pct):
+        reason = "stop_loss"
+    else:
+        target_time = pos.target_time_utc or _parse_dt(mark_row.get("target_time_utc"))
+        if target_time is not None and now_utc >= (target_time + timedelta(seconds=max(0.0, time_stop_grace_seconds))):
+            reason = "time_stop"
+    if reason is None:
+        return None
+    return exit_fill, reason, ret, unrealized_pnl
+
+
+def _mark_yes_mid_from_row(row: dict[str, Any]) -> float | None:
+    implied_mid = _as_float(row.get("implied_yes_mid"))
+    if implied_mid is not None:
+        return max(0.001, min(0.999, implied_mid))
+    yes_bid = _as_float(row.get("yes_bid"))
+    yes_ask = _as_float(row.get("yes_ask"))
+    if yes_bid is not None and yes_ask is not None:
+        return max(0.001, min(0.999, (yes_bid + yes_ask) / 2.0))
+    return None
+
+
 def run_paper_settlement_reconcile() -> dict[str, Any]:
     base_dir = Path(os.getenv("WEATHER_BOT_RUNNER_BASEDIR", "data/sample"))
     journal_path = Path(os.getenv("WEATHER_BOT_PAPER_JOURNAL_PATH", str(base_dir / "paper_journal.jsonl")))
     state_path = Path(os.getenv("WEATHER_BOT_PAPER_SETTLEMENT_STATE", str(base_dir / "paper_settlement_state.json")))
     ledger_path = Path(os.getenv("WEATHER_BOT_PAPER_SETTLEMENT_LEDGER", str(base_dir / "paper_settlement_ledger.jsonl")))
+    mark_exits_enabled = os.getenv("WEATHER_BOT_PAPER_MARK_EXITS_ENABLED", "1").strip().lower() in {"1", "true", "yes"}
+    mark_fresh_seconds = float(os.getenv("WEATHER_BOT_PAPER_MARK_MAX_AGE_SECONDS", "1800"))
+    take_profit_pct = float(os.getenv("WEATHER_BOT_PAPER_TAKE_PROFIT_PCT", "0.35"))
+    stop_loss_pct = float(os.getenv("WEATHER_BOT_PAPER_STOP_LOSS_PCT", "0.20"))
+    time_stop_grace_seconds = float(os.getenv("WEATHER_BOT_PAPER_TIME_STOP_GRACE_SECONDS", "300"))
 
     state = load_state(state_path)
     closed_ids = set(state.closed_market_ids)
@@ -200,6 +337,7 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
             size_usd=size_usd,
             entry_price=entry_price,
             signal_time_utc=signal_time,
+            target_time_utc=_parse_dt(market.get("target_time_utc")),
             source_event_type="signal",
         )
         open_by_market[market_id] = pos
@@ -215,8 +353,10 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
     outcome_by_market = {o.market_id: o for o in outcomes if o.market_id}
 
     settled_now = 0
+    mark_exits_now = 0
     ledger_rows: list[dict[str, Any]] = []
     realized_delta = 0.0
+    now_utc = datetime.now(UTC)
     for market_id, pos in list(open_by_market.items()):
         out = outcome_by_market.get(market_id)
         if out is None:
@@ -245,11 +385,64 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
                 "pnl_usd": round(pnl, 6),
                 "return_pct": round(ret, 6),
                 "signal_time_utc": pos.signal_time_utc,
+                "target_time_utc": pos.target_time_utc or out.end_date_utc,
                 "settled_end_utc": out.end_date_utc,
                 "outcome_yes": out.outcome_yes,
                 "settlement_source": "gamma",
             }
         )
+
+    mark_rows: dict[str, dict[str, Any]] = {}
+    mark_source_path = None
+    if mark_exits_enabled and open_by_market:
+        mark_rows, mark_source_path = _load_latest_mark_rows(base_dir)
+        for market_id, pos in list(open_by_market.items()):
+            row = mark_rows.get(market_id)
+            if not isinstance(row, dict):
+                continue
+            decision = _mark_exit_price_and_reason(
+                pos,
+                row,
+                now_utc=now_utc,
+                mark_fresh_seconds=mark_fresh_seconds,
+                take_profit_pct=take_profit_pct,
+                stop_loss_pct=stop_loss_pct,
+                time_stop_grace_seconds=time_stop_grace_seconds,
+            )
+            if decision is None:
+                continue
+            exit_price, exit_reason, ret_mark, _ = decision
+            shares = pos.size_usd / max(pos.entry_price, 1e-9)
+            pnl = shares * (exit_price - pos.entry_price)
+            ret_realized = (exit_price - pos.entry_price) / max(pos.entry_price, 1e-9)
+            mark_yes_mid = _mark_yes_mid_from_row(row)
+            mark_exits_now += 1
+            realized_delta += pnl
+            closed_ids.add(market_id)
+            open_by_market.pop(market_id, None)
+            ledger_rows.append(
+                {
+                    "event_type": "paper_mark_exit_trade",
+                    "created_at_utc": now_utc,
+                    "market_id": market_id,
+                    "event_slug": pos.event_slug or str(row.get("event_slug") or ""),
+                    "city": pos.city or str(row.get("city") or ""),
+                    "direction": pos.direction,
+                    "size_usd": pos.size_usd,
+                    "entry_price": round(pos.entry_price, 6),
+                    "exit_price": round(exit_price, 6),
+                    "shares": round(shares, 6),
+                    "pnl_usd": round(pnl, 6),
+                    "return_pct": round(ret_realized, 6),
+                    "signal_time_utc": pos.signal_time_utc,
+                    "target_time_utc": pos.target_time_utc or _parse_dt(row.get("target_time_utc")),
+                    "mark_yes_mid": None if mark_yes_mid is None else round(mark_yes_mid, 6),
+                    "mark_quote_time_utc": _parse_dt(row.get("quote_time_utc")) or _parse_dt(row.get("snapshot_time_utc")),
+                    "mark_reason": exit_reason,
+                    "mark_return_at_mid_pct": round(ret_mark, 6),
+                    "mark_source": "feature_rows_export_or_scan_snapshot",
+                }
+            )
 
     _append_ledger_rows(ledger_path, ledger_rows)
     next_state = PaperSettlementState(
@@ -263,23 +456,33 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
 
     wins = sum(1 for r in ledger_rows if float(r["pnl_usd"]) > 0)
     losses = sum(1 for r in ledger_rows if float(r["pnl_usd"]) < 0)
+    settlement_trades_now = sum(1 for r in ledger_rows if r.get("event_type") == "paper_settlement_trade")
     report = {
-        "as_of_utc": datetime.now(UTC).isoformat(),
+        "as_of_utc": now_utc.isoformat(),
         "journal_path": str(journal_path),
         "state_path": str(state_path),
         "ledger_path": str(ledger_path),
+        "mark_source_path": mark_source_path,
         "signals_seen": ingested_signals,
         "positions_added": added_positions,
         "duplicate_signals_skipped": duplicate_signals_skipped,
         "malformed_signals_skipped": malformed_signals_skipped,
         "open_positions": len(next_state.open_positions),
+        "closed_this_run": len(ledger_rows),
         "settled_this_run": settled_now,
+        "mark_exits_this_run": mark_exits_now,
+        "settlement_trades_this_run": settlement_trades_now,
         "wins_this_run": wins,
         "losses_this_run": losses,
         "realized_pnl_delta_usd": round(realized_delta, 6),
         "realized_pnl_total_usd": round(next_state.realized_pnl_usd, 6),
         "settled_trades_total": next_state.settled_trades,
         "resolved_market_ids_available": len(outcome_by_market),
+        "mark_exits_enabled": mark_exits_enabled,
+        "mark_max_age_seconds": mark_fresh_seconds,
+        "take_profit_pct": take_profit_pct,
+        "stop_loss_pct": stop_loss_pct,
+        "time_stop_grace_seconds": time_stop_grace_seconds,
     }
     report_path = Path(os.getenv("WEATHER_BOT_PAPER_SETTLEMENT_REPORT", str(base_dir / "paper_settlement_report.json")))
     report_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
@@ -294,4 +497,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

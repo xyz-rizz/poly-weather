@@ -58,6 +58,7 @@ sudo cp deploy/systemd/weather-bot-calibration-refresh.service /etc/systemd/syst
 sudo cp deploy/systemd/weather-bot-calibration-refresh.timer /etc/systemd/system/
 sudo cp deploy/systemd/weather-bot-settlement-trigger.service /etc/systemd/system/
 sudo cp deploy/systemd/weather-bot-settlement-trigger.timer /etc/systemd/system/
+sudo cp deploy/systemd/weather-bot-paper-settlement-reconcile.service /etc/systemd/system/
 sudo cp deploy/systemd/weather-bot-git-autosave.service /etc/systemd/system/
 sudo cp deploy/systemd/weather-bot-git-autosave.timer /etc/systemd/system/
 sudo systemctl daemon-reload
@@ -88,7 +89,14 @@ sudo systemctl list-timers | rg weather-bot-settlement
 ```
 
 This checks every ~15 minutes and runs calibration refresh only when new settled markets overlap your stored scans.
-It also runs the paper settlement reconciler to realize paper PnL on settled markets.
+It also runs the paper settlement reconciler on every check so paper positions can close on settlement or mark-based TP/SL/time-stop triggers.
+
+Paper mark-exit tuning (optional in `.env.weather-bot`):
+- `WEATHER_BOT_PAPER_MARK_EXITS_ENABLED` (default `1`)
+- `WEATHER_BOT_PAPER_MARK_MAX_AGE_SECONDS` (default `1800`)
+- `WEATHER_BOT_PAPER_TAKE_PROFIT_PCT` (default `0.35`)
+- `WEATHER_BOT_PAPER_STOP_LOSS_PCT` (default `0.20`)
+- `WEATHER_BOT_PAPER_TIME_STOP_GRACE_SECONDS` (default `300`)
 
 Fallback daily mode (optional, can run alongside trigger):
 

@@ -67,7 +67,7 @@ def run_settlement_trigger() -> dict[str, Any]:
         action = "refresh"
         reason = "forced" if force else f"new matched settled markets: +{new_matched}"
         refresh_result = run_calibration_refresh()
-        paper_settlement_result = run_paper_settlement_reconcile()
+    paper_settlement_result = run_paper_settlement_reconcile()
 
     next_state = {
         "last_checked_utc": _iso_now(),
@@ -93,7 +93,9 @@ def run_settlement_trigger() -> dict[str, Any]:
             k: paper_settlement_result.get(k)
             for k in (
                 "open_positions",
+                "closed_this_run",
                 "settled_this_run",
+                "mark_exits_this_run",
                 "realized_pnl_delta_usd",
                 "realized_pnl_total_usd",
                 "settled_trades_total",
