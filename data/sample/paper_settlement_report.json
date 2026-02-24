@@ -1,7 +1,7 @@
 {
-  "as_of_utc": "2026-02-24T07:34:04.292845+00:00",
+  "as_of_utc": "2026-02-24T07:56:59.533681+00:00",
   "closed_this_run": 0,
-  "duplicate_signals_skipped": 169,
+  "duplicate_signals_skipped": 174,
   "exit_regime_profile_enabled": false,
   "journal_path": "data/sample/paper_journal.jsonl",
   "ledger_path": "data/sample/paper_settlement_ledger.jsonl",
@@ -20,7 +20,7 @@
   "settled_this_run": 0,
   "settled_trades_total": 1,
   "settlement_trades_this_run": 0,
-  "signals_seen": 169,
+  "signals_seen": 174,
   "state_path": "data/sample/paper_settlement_state.json",
   "stop_loss_pct": 0.2,
   "take_profit_pct": 0.35,
