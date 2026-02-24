@@ -50,6 +50,9 @@ class WeatherMarket:
     boundary_semantics: str = "unknown"
     timezone_name: str = "UTC"
     resolution_notes: str = ""
+    yes_token_id: str = ""
+    no_token_id: str = ""
+    clob_market_id: str = ""
 
 
 @dataclass(frozen=True)

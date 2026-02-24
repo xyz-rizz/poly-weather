@@ -172,6 +172,7 @@ class PolymarketGammaWeatherMarketSource(MarketSource):
         market_id = str(row.get("id") or row.get("conditionId") or row.get("slug") or "")
         if not market_id:
             return None
+        yes_token_id, no_token_id = self._extract_outcome_token_ids(row)
         target_time = _parse_dt(
             row.get("endDate")
             or row.get("end_date_iso")
@@ -192,6 +193,9 @@ class PolymarketGammaWeatherMarketSource(MarketSource):
             boundary_semantics=parsed.boundary_semantics,
             timezone_name=parsed.timezone_name or "UTC",
             resolution_notes=parsed.notes,
+            yes_token_id=yes_token_id,
+            no_token_id=no_token_id,
+            clob_market_id=str(row.get("clobMarketId") or row.get("conditionId") or market_id),
         )
 
     def _parse_quote(self, row: dict[str, Any], market_id: str) -> MarketQuote:
@@ -249,6 +253,75 @@ class PolymarketGammaWeatherMarketSource(MarketSource):
             last_price_yes=last_yes if last_yes > 0 else None,
             as_of_utc=quote_ts,
         )
+
+    @staticmethod
+    def _extract_outcome_token_ids(row: dict[str, Any]) -> tuple[str, str]:
+        # Gamma payloads vary; try common fields and formats.
+        for key in ("outcomeTokenIds", "clobTokenIds", "tokenIds"):
+            value = row.get(key)
+            ids = PolymarketGammaWeatherMarketSource._coerce_token_id_pair(value)
+            if ids is not None:
+                return ids
+        # Sometimes nested under metadata or tokens array
+        meta = row.get("metadata")
+        if isinstance(meta, dict):
+            for key in ("outcomeTokenIds", "clobTokenIds", "tokenIds"):
+                ids = PolymarketGammaWeatherMarketSource._coerce_token_id_pair(meta.get(key))
+                if ids is not None:
+                    return ids
+        tokens = row.get("tokens")
+        if isinstance(tokens, list):
+            yes_id = ""
+            no_id = ""
+            for tok in tokens:
+                if not isinstance(tok, dict):
+                    continue
+                outcome = str(tok.get("outcome") or tok.get("name") or "").strip().upper()
+                tok_id = str(tok.get("tokenId") or tok.get("id") or tok.get("clobTokenId") or "")
+                if not tok_id:
+                    continue
+                if outcome == "YES" and not yes_id:
+                    yes_id = tok_id
+                elif outcome == "NO" and not no_id:
+                    no_id = tok_id
+            if yes_id or no_id:
+                return yes_id, no_id
+        return "", ""
+
+    @staticmethod
+    def _coerce_token_id_pair(value: Any) -> tuple[str, str] | None:
+        if value is None:
+            return None
+        if isinstance(value, str):
+            txt = value.strip()
+            if not txt:
+                return None
+            # JSON string list or comma-separated
+            try:
+                import json
+
+                parsed = json.loads(txt)
+                pair = PolymarketGammaWeatherMarketSource._coerce_token_id_pair(parsed)
+                if pair is not None:
+                    return pair
+            except Exception:
+                pass
+            if "," in txt:
+                parts = [p.strip() for p in txt.split(",") if p.strip()]
+                if len(parts) >= 2:
+                    return parts[0], parts[1]
+            return None
+        if isinstance(value, list):
+            parts = [str(x).strip() for x in value if str(x).strip()]
+            if len(parts) >= 2:
+                return parts[0], parts[1]
+            return None
+        if isinstance(value, dict):
+            yes_id = str(value.get("YES") or value.get("yes") or value.get("0") or "").strip()
+            no_id = str(value.get("NO") or value.get("no") or value.get("1") or "").strip()
+            if yes_id or no_id:
+                return yes_id, no_id
+        return None
 
     @staticmethod
     def _extract_city_from_meta(row: dict[str, Any]) -> str | None:

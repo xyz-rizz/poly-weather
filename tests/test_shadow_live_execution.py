@@ -18,6 +18,9 @@ def _opp(now: datetime) -> Opportunity:
         bucket_low_f=70,
         bucket_high_f=71,
         event_slug="highest-temperature-in-atlanta-on-february-24-2026",
+        yes_token_id="1001",
+        no_token_id="1002",
+        clob_market_id="cond-1",
     )
     quote = MarketQuote(
         market_id="m1",
@@ -78,3 +81,26 @@ def test_shadow_live_execution_accepts_when_guards_met(tmp_path, monkeypatch):
     assert first["accepted"] is True
     assert first["intent"]["payload"]["shadow_only"] is True
 
+
+def test_dry_run_mode_writes_submit_result(tmp_path, monkeypatch):
+    now = datetime.now(UTC)
+    monkeypatch.setenv("WEATHER_BOT_RUNNER_BASEDIR", str(tmp_path))
+    monkeypatch.setenv("WEATHER_BOT_EXEC_ALLOW", "1")
+    monkeypatch.setenv("WEATHER_BOT_EXECUTION_MODE", "dry_run")
+    monkeypatch.setenv("WEATHER_BOT_EXEC_MIN_CLOSED_TRADES", "0")
+    monkeypatch.setenv("WEATHER_BOT_EXEC_MIN_TOTAL_PNL_USD", "-100")
+    monkeypatch.setenv("WEATHER_BOT_EXEC_MAX_SCAN_AGE_SECONDS", "600")
+    (tmp_path / "paper_performance_report.json").write_text(
+        json.dumps({"closed_summary": {"trades": 0}, "open_summary": {"total_pnl_including_open_usd": 0.0}}),
+        encoding="utf-8",
+    )
+    (tmp_path / "paper_settlement_report.json").write_text(json.dumps({"realized_pnl_total_usd": 0.0}), encoding="utf-8")
+    (tmp_path / "paper_settlement_state.json").write_text(json.dumps({"open_positions": []}), encoding="utf-8")
+    (tmp_path / "portfolio_state.json").write_text(json.dumps({"open_positions": [], "realized_pnl_today_usd": 0.0}), encoding="utf-8")
+    result = run_shadow_live_execution(opportunities=[_opp(now)], scan_time_utc=now, cfg=ScanConfig(), mode="live_scan")
+    assert result["execution_mode"] == "dry_run"
+    assert result["accepted_shadow_submits_this_scan"] == 1
+    assert result["submit_results_this_scan"] == 1
+    lines = (tmp_path / "live_execution_results.jsonl").read_text(encoding="utf-8").splitlines()
+    obj = json.loads(lines[-1])
+    assert obj["submit_ok"] is True

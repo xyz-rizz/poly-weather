@@ -167,7 +167,7 @@ def main() -> int:
         print(f"Portfolio summary: {portfolio_summary(next_state)}")
 
     exec_mode = os.getenv("WEATHER_BOT_EXECUTION_MODE", "off").strip().lower()
-    if exec_mode == "shadow_submit":
+    if exec_mode in {"shadow_submit", "dry_run", "live_canary"}:
         exec_state = run_shadow_live_execution(
             opportunities=result.opportunities,
             scan_time_utc=result.scanned_at_utc,
@@ -175,7 +175,7 @@ def main() -> int:
             mode=mode,
         )
         print(
-            "Shadow live execution attempts="
+            f"{exec_mode} execution attempts="
             f"{exec_state.get('attempts_this_scan')} accepted={exec_state.get('accepted_shadow_submits_this_scan')} "
             f"guard={((exec_state.get('guard') or {}).get('reason'))}"
         )

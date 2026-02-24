@@ -166,13 +166,18 @@ Notes:
 
 `paper_performance_report.json` now includes breakdowns by `exit_reason`, `city`, `direction`, `entry_horizon`, and `exit_regime`, plus simple tuning-candidate suggestions based on realized paper trades.
 
-## Shadow Live Execution (No Real Orders)
+## Execution Modes (Guarded)
 
-The project now includes a `shadow-submit` execution scaffold that:
+The project now includes guarded execution modes:
+- `shadow_submit` (intent logging only)
+- `dry_run` (builds CLOB payloads and logs synthetic submit results, no real orders)
+- `live_canary` (attempts real CLOB submits; use only with tiny caps and credentials)
+
+The scaffold:
 - builds live order intents from accepted opportunities
 - enforces kill-switch guards (paper performance, stale scan age, exposure)
 - logs intended orders to `data/sample/live_execution_attempts.jsonl`
-- **does not submit real orders**
+- logs submit results to `data/sample/live_execution_results.jsonl` for `dry_run` / `live_canary`
 
 Enable in `.env.weather-bot`:
 
@@ -182,6 +187,16 @@ WEATHER_BOT_EXEC_ALLOW=1
 ```
 
 Keep `WEATHER_BOT_EXEC_ALLOW=0` unless you intentionally want the VPS to produce shadow execution intent logs.
+
+Recommended progression:
+1. `shadow_submit` with `WEATHER_BOT_EXEC_ALLOW=1`
+2. `dry_run` (validate token IDs/payloads and guard behavior)
+3. `live_canary` with:
+   - `WEATHER_BOT_EXEC_CANARY_MAX_ORDER_USD=5`
+   - `WEATHER_BOT_EXEC_CANARY_MAX_NOTIONAL_PER_SCAN_USD=5-10`
+   - `WEATHER_BOT_EXEC_MAX_SUBMITS_PER_SCAN=1`
+   - `POLYMARKET_PRIVATE_KEY` configured
+   - optional `py-clob-client` installed in the VPS venv
 
 ## Security Notes (Important)
 

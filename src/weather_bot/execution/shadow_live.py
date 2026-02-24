@@ -9,6 +9,7 @@ from typing import Any
 
 from weather_bot.core.config import ScanConfig
 from weather_bot.core.risk import RiskEngine
+from weather_bot.execution.polymarket_clob import PolymarketCLOBExecutor
 from weather_bot.models.domain import Opportunity
 from weather_bot.models.risk import PlannedPaperOrder
 from weather_bot.simulation.portfolio_state import load_portfolio_state
@@ -153,10 +154,12 @@ def _build_shadow_intent(plan: PlannedPaperOrder, opp: Opportunity, now_utc: dat
     shares_estimate = plan.size_usd / max(price_limit, 1e-9)
     payload = {
         "market_id": plan.market_id,
+        "clob_market_id": opp.market.clob_market_id or opp.market.market_id,
         "event_slug": plan.event_slug,
         "city": plan.city,
         "side": "BUY",
         "outcome": "YES" if direction == "BUY_YES" else "NO",
+        "token_id": opp.market.yes_token_id if direction == "BUY_YES" else opp.market.no_token_id,
         "order_type": "limit",
         "size_usd": round(plan.size_usd, 6),
         "price_limit": round(price_limit, 6),
@@ -199,11 +202,13 @@ def run_shadow_live_execution(
     cfg: ScanConfig,
     mode: str,
 ) -> dict[str, Any]:
+    exec_mode = os.getenv("WEATHER_BOT_EXECUTION_MODE", "shadow_submit").strip().lower()
     base_dir = Path(os.getenv("WEATHER_BOT_RUNNER_BASEDIR", "data/sample"))
     now_utc = datetime.now(UTC)
     guard = _execution_guard(base_dir=base_dir, scan_time_utc=scan_time_utc, cfg=cfg)
     attempt_log_path = Path(os.getenv("WEATHER_BOT_EXEC_ATTEMPT_LOG_PATH", str(base_dir / "live_execution_attempts.jsonl")))
     state_path = Path(os.getenv("WEATHER_BOT_EXEC_STATE_PATH", str(base_dir / "live_execution_state.json")))
+    result_log_path = Path(os.getenv("WEATHER_BOT_EXEC_RESULT_LOG_PATH", str(base_dir / "live_execution_results.jsonl")))
 
     state = load_portfolio_state(Path(os.getenv("WEATHER_BOT_PORTFOLIO_STATE_PATH", str(base_dir / "portfolio_state.json"))))
     risk_engine = RiskEngine(cfg)
@@ -211,24 +216,40 @@ def run_shadow_live_execution(
     opp_by_market = {o.market.market_id: o for o in opportunities}
 
     max_submits = int(os.getenv("WEATHER_BOT_EXEC_MAX_SUBMITS_PER_SCAN", "2"))
+    canary_max_order_usd = float(os.getenv("WEATHER_BOT_EXEC_CANARY_MAX_ORDER_USD", "5"))
+    canary_max_notional_per_scan = float(os.getenv("WEATHER_BOT_EXEC_CANARY_MAX_NOTIONAL_PER_SCAN_USD", "10"))
     submitted = 0
+    accepted_notional = 0.0
     attempts: list[dict[str, Any]] = []
+    results: list[dict[str, Any]] = []
+    clob = PolymarketCLOBExecutor(exec_mode if exec_mode in {"dry_run", "live_canary"} else "dry_run")
     for plan in plans:
         opp = opp_by_market.get(plan.market_id)
         if opp is None:
             continue
         accepted_by_plan = bool(plan.accepted)
         accepted = guard.allowed and accepted_by_plan and submitted < max_submits
-        reason = "accepted-shadow-submit" if accepted else (
-            "max submits per scan reached" if guard.allowed and accepted_by_plan and submitted >= max_submits else (plan.reason if not accepted_by_plan else guard.reason)
-        )
+        reject_reason = None
+        if accepted and plan.size_usd > canary_max_order_usd:
+            accepted = False
+            reject_reason = "canary max order notional exceeded"
+        if accepted and (accepted_notional + plan.size_usd) > canary_max_notional_per_scan:
+            accepted = False
+            reject_reason = "canary max scan notional exceeded"
         intent = _build_shadow_intent(plan, opp, now_utc)
+        if accepted and not str(intent.payload.get("token_id") or "").strip() and exec_mode in {"dry_run", "live_canary"}:
+            accepted = False
+            reject_reason = "missing token_id for clob execution"
+        reason = "accepted-shadow-submit" if accepted else (
+            reject_reason
+            or ("max submits per scan reached" if guard.allowed and accepted_by_plan and submitted >= max_submits else (plan.reason if not accepted_by_plan else guard.reason))
+        )
         attempts.append(
             {
                 "event_type": "live_execution_attempt",
                 "created_at_utc": now_utc,
                 "mode": mode,
-                "execution_mode": "shadow_submit",
+                "execution_mode": exec_mode,
                 "strategy_id": cfg.strategy_id,
                 "guard": asdict(guard),
                 "accepted": accepted,
@@ -239,18 +260,42 @@ def run_shadow_live_execution(
         )
         if accepted:
             submitted += 1
+            accepted_notional += plan.size_usd
+            if exec_mode in {"dry_run", "live_canary"}:
+                submit_res = clob.submit_limit_order(intent.payload)
+                results.append(
+                    {
+                        "event_type": "live_execution_result",
+                        "created_at_utc": now_utc,
+                        "mode": mode,
+                        "execution_mode": exec_mode,
+                        "market_id": intent.market_id,
+                        "event_slug": intent.event_slug,
+                        "city": intent.city,
+                        "accepted_attempt": True,
+                        "submit_ok": submit_res.ok,
+                        "submit_error": submit_res.error,
+                        "response": submit_res.response,
+                    }
+                )
 
     _append_attempts(attempt_log_path, attempts)
+    _append_attempts(result_log_path, results)
     exec_state = {
         "as_of_utc": now_utc.isoformat(),
-        "execution_mode": "shadow_submit",
+        "execution_mode": exec_mode,
         "guard": asdict(guard),
         "attempts_this_scan": len(attempts),
         "accepted_shadow_submits_this_scan": submitted,
+        "accepted_notional_usd_this_scan": round(accepted_notional, 6),
         "max_submits_per_scan": max_submits,
+        "canary_max_order_usd": canary_max_order_usd,
+        "canary_max_notional_per_scan_usd": canary_max_notional_per_scan,
         "attempt_log_path": str(attempt_log_path),
+        "result_log_path": str(result_log_path),
+        "submit_results_this_scan": len(results),
+        "submit_successes_this_scan": sum(1 for r in results if r.get("submit_ok")),
     }
     state_path.parent.mkdir(parents=True, exist_ok=True)
     state_path.write_text(json.dumps(exec_state, indent=2, sort_keys=True), encoding="utf-8")
     return exec_state
-
