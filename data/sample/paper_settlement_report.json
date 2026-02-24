@@ -1,7 +1,8 @@
 {
-  "as_of_utc": "2026-02-24T07:33:00.572294+00:00",
+  "as_of_utc": "2026-02-24T07:34:04.292845+00:00",
   "closed_this_run": 0,
   "duplicate_signals_skipped": 169,
+  "exit_regime_profile_enabled": false,
   "journal_path": "data/sample/paper_journal.jsonl",
   "ledger_path": "data/sample/paper_settlement_ledger.jsonl",
   "losses_this_run": 0,

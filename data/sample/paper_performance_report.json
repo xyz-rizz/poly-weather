@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-24T07:33:00.919784+00:00",
+  "as_of_utc": "2026-02-24T07:34:04.582294+00:00",
   "closed_breakdowns": {
     "by_city": {
       "Atlanta": {
@@ -95,6 +95,32 @@
         "trades": 3,
         "win_rate": 0.0,
         "wins": 0
+      }
+    },
+    "by_exit_regime": {
+      "default": {
+        "avg_pnl_usd": -0.825585,
+        "avg_return_pct": -0.165117,
+        "flat": 0,
+        "losses": 3,
+        "profit_factor": 0.630637,
+        "total_pnl_usd": -3.302341,
+        "trades": 4,
+        "win_rate": 0.25,
+        "wins": 1
+      }
+    },
+    "by_exit_regime_horizon": {
+      "unknown": {
+        "avg_pnl_usd": -0.825585,
+        "avg_return_pct": -0.165117,
+        "flat": 0,
+        "losses": 3,
+        "profit_factor": 0.630637,
+        "total_pnl_usd": -3.302341,
+        "trades": 4,
+        "win_rate": 0.25,
+        "wins": 1
       }
     }
   },
@@ -224,7 +250,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.14,
       "event_slug": "",
-      "hours_to_target_now": 1.449745,
+      "hours_to_target_now": 1.43206,
       "mark_position_price": 0.115,
       "mark_quote_time_utc": "2026-02-23T15:34:33.606858+00:00",
       "mark_yes_mid": 0.115,
@@ -241,7 +267,7 @@
       "entry_horizon_bucket": "expired",
       "entry_price": 0.64,
       "event_slug": "highest-temperature-in-atlanta-on-february-23-2026",
-      "hours_to_target_now": -19.550255,
+      "hours_to_target_now": -19.56794,
       "market_id": "1407238",
       "signal_time_utc": "2026-02-23T12:50:57.632777+00:00",
       "size_usd": 5.0,
@@ -253,7 +279,7 @@
       "entry_horizon_bucket": "expired",
       "entry_price": 0.62,
       "event_slug": "highest-temperature-in-atlanta-on-february-23-2026",
-      "hours_to_target_now": -19.550255,
+      "hours_to_target_now": -19.56794,
       "market_id": "1407239",
       "signal_time_utc": "2026-02-23T12:56:31.843668+00:00",
       "size_usd": 5.0,
@@ -265,7 +291,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.6599999999999999,
       "event_slug": "highest-temperature-in-atlanta-on-february-24-2026",
-      "hours_to_target_now": 4.449745,
+      "hours_to_target_now": 4.43206,
       "mark_position_price": 0.58,
       "mark_quote_time_utc": "2026-02-24T07:28:48.072899+00:00",
       "mark_yes_mid": 0.42,
@@ -282,7 +308,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.01,
       "event_slug": "highest-temperature-in-nyc-on-february-24-2026",
-      "hours_to_target_now": 4.449745,
+      "hours_to_target_now": 4.43206,
       "mark_position_price": 0.009,
       "mark_quote_time_utc": "2026-02-24T07:28:53.135568+00:00",
       "mark_yes_mid": 0.009,
@@ -299,7 +325,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.64,
       "event_slug": "highest-temperature-in-dallas-on-february-24-2026",
-      "hours_to_target_now": 4.449745,
+      "hours_to_target_now": 4.43206,
       "mark_position_price": 0.605,
       "mark_quote_time_utc": "2026-02-24T07:28:33.553606+00:00",
       "mark_yes_mid": 0.395,
@@ -316,7 +342,7 @@
       "entry_horizon_bucket": "2-6h",
       "entry_price": 0.5700000000000001,
       "event_slug": "highest-temperature-in-dallas-on-february-24-2026",
-      "hours_to_target_now": 4.449745,
+      "hours_to_target_now": 4.43206,
       "mark_position_price": 0.615,
       "mark_quote_time_utc": "2026-02-24T07:28:42.064447+00:00",
       "mark_yes_mid": 0.385,
@@ -337,5 +363,54 @@
     "unmarked_open_positions": 2,
     "unrealized_pnl_usd": -1.877618
   },
-  "state_path": "data/sample/paper_settlement_state.json"
+  "state_path": "data/sample/paper_settlement_state.json",
+  "tuning_candidates": {
+    "by_exit_reason": {
+      "settlement": {
+        "avg_pnl_usd": 5.638298,
+        "avg_return_pct": 1.12766,
+        "flat": 0,
+        "losses": 0,
+        "profit_factor": null,
+        "total_pnl_usd": 5.638298,
+        "trades": 1,
+        "win_rate": 1.0,
+        "wins": 1
+      },
+      "stop_loss": {
+        "avg_pnl_usd": -2.980213,
+        "avg_return_pct": -0.596043,
+        "flat": 0,
+        "losses": 3,
+        "profit_factor": 0.0,
+        "total_pnl_usd": -8.940639,
+        "trades": 3,
+        "win_rate": 0.0,
+        "wins": 0
+      }
+    },
+    "by_regime": {
+      "default": {
+        "avg_pnl_usd": -0.825585,
+        "avg_return_pct": -0.165117,
+        "flat": 0,
+        "losses": 3,
+        "profit_factor": 0.630637,
+        "total_pnl_usd": -3.302341,
+        "trades": 4,
+        "win_rate": 0.25,
+        "wins": 1
+      }
+    },
+    "suggestions": [
+      {
+        "reason": "negative pnl with low win rate",
+        "regime": "default",
+        "total_pnl_usd": -3.302341,
+        "trades": 4,
+        "type": "review_regime",
+        "win_rate": 0.25
+      }
+    ]
+  }
 }
