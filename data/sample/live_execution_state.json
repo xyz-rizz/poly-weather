@@ -1,0 +1,12 @@
+{
+  "accepted_shadow_submits_this_scan": 0,
+  "as_of_utc": "2026-02-24T08:49:27.837665+00:00",
+  "attempt_log_path": "data/sample/live_execution_attempts.jsonl",
+  "attempts_this_scan": 2,
+  "execution_mode": "shadow_submit",
+  "guard": {
+    "allowed": false,
+    "reason": "exec allow flag disabled"
+  },
+  "max_submits_per_scan": 2
+}
