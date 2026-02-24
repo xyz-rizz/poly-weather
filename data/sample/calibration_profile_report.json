@@ -3,10 +3,10 @@
     [
       "city=all|h=0-2h|p=0.8-0.9",
       {
-        "brier_calibrated": 0.051602,
-        "brier_delta": -0.664425,
+        "brier_calibrated": 0.055032,
+        "brier_delta": -0.660996,
         "brier_raw": 0.716027,
-        "calibrated_prob": 0.227161,
+        "calibrated_prob": 0.234588,
         "mean_pred": 0.846015,
         "n": 10,
         "obs_rate": 0.0
@@ -15,10 +15,10 @@
     [
       "city=all|h=all|p=0.8-0.9",
       {
-        "brier_calibrated": 0.051602,
-        "brier_delta": -0.664425,
+        "brier_calibrated": 0.055032,
+        "brier_delta": -0.660996,
         "brier_raw": 0.716027,
-        "calibrated_prob": 0.227161,
+        "calibrated_prob": 0.234588,
         "mean_pred": 0.846015,
         "n": 10,
         "obs_rate": 0.0
@@ -27,10 +27,10 @@
     [
       "city=NYC|h=0-2h|p=0.3-0.4",
       {
-        "brier_calibrated": 0.017296,
-        "brier_delta": -0.115688,
+        "brier_calibrated": 0.01943,
+        "brier_delta": -0.113554,
         "brier_raw": 0.132984,
-        "calibrated_prob": 0.131514,
+        "calibrated_prob": 0.139392,
         "mean_pred": 0.364595,
         "n": 8,
         "obs_rate": 0.0
@@ -39,10 +39,10 @@
     [
       "city=NYC|h=all|p=0.3-0.4",
       {
-        "brier_calibrated": 0.017296,
-        "brier_delta": -0.115688,
+        "brier_calibrated": 0.01943,
+        "brier_delta": -0.113554,
         "brier_raw": 0.132984,
-        "calibrated_prob": 0.131514,
+        "calibrated_prob": 0.139392,
         "mean_pred": 0.364595,
         "n": 8,
         "obs_rate": 0.0
@@ -51,10 +51,10 @@
     [
       "city=all|h=0-2h|p=0.3-0.4",
       {
-        "brier_calibrated": 0.017296,
-        "brier_delta": -0.115688,
+        "brier_calibrated": 0.01943,
+        "brier_delta": -0.113554,
         "brier_raw": 0.132984,
-        "calibrated_prob": 0.131514,
+        "calibrated_prob": 0.139392,
         "mean_pred": 0.364595,
         "n": 8,
         "obs_rate": 0.0
@@ -63,10 +63,10 @@
     [
       "city=all|h=all|p=0.3-0.4",
       {
-        "brier_calibrated": 0.017296,
-        "brier_delta": -0.115688,
+        "brier_calibrated": 0.01943,
+        "brier_delta": -0.113554,
         "brier_raw": 0.132984,
-        "calibrated_prob": 0.131514,
+        "calibrated_prob": 0.139392,
         "mean_pred": 0.364595,
         "n": 8,
         "obs_rate": 0.0
@@ -75,10 +75,10 @@
     [
       "city=NYC|h=0-2h|p=0.1-0.2",
       {
-        "brier_calibrated": 0.230528,
-        "brier_delta": -0.021453,
+        "brier_calibrated": 0.22898,
+        "brier_delta": -0.023001,
         "brier_raw": 0.251981,
-        "calibrated_prob": 0.187262,
+        "calibrated_prob": 0.193603,
         "mean_pred": 0.142963,
         "n": 16,
         "obs_rate": 0.3125
@@ -87,10 +87,10 @@
     [
       "city=NYC|h=all|p=0.1-0.2",
       {
-        "brier_calibrated": 0.230528,
-        "brier_delta": -0.021453,
+        "brier_calibrated": 0.22898,
+        "brier_delta": -0.023001,
         "brier_raw": 0.251981,
-        "calibrated_prob": 0.187262,
+        "calibrated_prob": 0.193603,
         "mean_pred": 0.142963,
         "n": 16,
         "obs_rate": 0.3125
@@ -99,10 +99,10 @@
     [
       "city=all|h=0-2h|p=0.1-0.2",
       {
-        "brier_calibrated": 0.230528,
-        "brier_delta": -0.021453,
+        "brier_calibrated": 0.22898,
+        "brier_delta": -0.023001,
         "brier_raw": 0.251981,
-        "calibrated_prob": 0.187262,
+        "calibrated_prob": 0.193603,
         "mean_pred": 0.142963,
         "n": 16,
         "obs_rate": 0.3125
@@ -111,22 +111,70 @@
     [
       "city=all|h=all|p=0.1-0.2",
       {
-        "brier_calibrated": 0.230528,
-        "brier_delta": -0.021453,
+        "brier_calibrated": 0.22898,
+        "brier_delta": -0.023001,
         "brier_raw": 0.251981,
-        "calibrated_prob": 0.187262,
+        "calibrated_prob": 0.193603,
         "mean_pred": 0.142963,
         "n": 16,
         "obs_rate": 0.3125
       }
     ],
     [
+      "city=Atlanta|h=0-2h|p=0.0-0.1",
+      {
+        "brier_calibrated": 0.10947,
+        "brier_delta": -0.005995,
+        "brier_raw": 0.115466,
+        "calibrated_prob": 0.115238,
+        "mean_pred": 0.020853,
+        "n": 88,
+        "obs_rate": 0.125
+      }
+    ],
+    [
+      "city=Atlanta|h=all|p=0.0-0.1",
+      {
+        "brier_calibrated": 0.10947,
+        "brier_delta": -0.005995,
+        "brier_raw": 0.115466,
+        "calibrated_prob": 0.115238,
+        "mean_pred": 0.020853,
+        "n": 88,
+        "obs_rate": 0.125
+      }
+    ],
+    [
+      "city=all|h=0-2h|p=0.0-0.1",
+      {
+        "brier_calibrated": 0.091637,
+        "brier_delta": -0.001919,
+        "brier_raw": 0.093556,
+        "calibrated_prob": 0.099175,
+        "mean_pred": 0.025691,
+        "n": 147,
+        "obs_rate": 0.102041
+      }
+    ],
+    [
+      "city=all|h=all|p=0.0-0.1",
+      {
+        "brier_calibrated": 0.091637,
+        "brier_delta": -0.001919,
+        "brier_raw": 0.093556,
+        "calibrated_prob": 0.099175,
+        "mean_pred": 0.025691,
+        "n": 147,
+        "obs_rate": 0.102041
+      }
+    ],
+    [
       "city=NYC|h=0-2h|p=0.0-0.1",
       {
-        "brier_calibrated": 0.063204,
-        "brier_delta": 0.002328,
+        "brier_calibrated": 0.063225,
+        "brier_delta": 0.002349,
         "brier_raw": 0.060876,
-        "calibrated_prob": 0.06967,
+        "calibrated_prob": 0.072765,
         "mean_pred": 0.032906,
         "n": 59,
         "obs_rate": 0.067797
@@ -135,34 +183,10 @@
     [
       "city=NYC|h=all|p=0.0-0.1",
       {
-        "brier_calibrated": 0.063204,
-        "brier_delta": 0.002328,
+        "brier_calibrated": 0.063225,
+        "brier_delta": 0.002349,
         "brier_raw": 0.060876,
-        "calibrated_prob": 0.06967,
-        "mean_pred": 0.032906,
-        "n": 59,
-        "obs_rate": 0.067797
-      }
-    ],
-    [
-      "city=all|h=0-2h|p=0.0-0.1",
-      {
-        "brier_calibrated": 0.063204,
-        "brier_delta": 0.002328,
-        "brier_raw": 0.060876,
-        "calibrated_prob": 0.06967,
-        "mean_pred": 0.032906,
-        "n": 59,
-        "obs_rate": 0.067797
-      }
-    ],
-    [
-      "city=all|h=all|p=0.0-0.1",
-      {
-        "brier_calibrated": 0.063204,
-        "brier_delta": 0.002328,
-        "brier_raw": 0.060876,
-        "calibrated_prob": 0.06967,
+        "calibrated_prob": 0.072765,
         "mean_pred": 0.032906,
         "n": 59,
         "obs_rate": 0.067797
@@ -170,20 +194,20 @@
     ]
   ],
   "summary": {
-    "global_mean_pred": 0.228848,
-    "global_obs_rate": 0.091743,
-    "profile_bins": 14,
-    "rows_labeled": 109,
-    "rows_total": 5937
+    "global_mean_pred": 0.135936,
+    "global_obs_rate": 0.106599,
+    "profile_bins": 16,
+    "rows_labeled": 197,
+    "rows_total": 7152
   },
   "worst_brier_change_bins": [
     [
       "city=NYC|h=0-2h|p=0.0-0.1",
       {
-        "brier_calibrated": 0.063204,
-        "brier_delta": 0.002328,
+        "brier_calibrated": 0.063225,
+        "brier_delta": 0.002349,
         "brier_raw": 0.060876,
-        "calibrated_prob": 0.06967,
+        "calibrated_prob": 0.072765,
         "mean_pred": 0.032906,
         "n": 59,
         "obs_rate": 0.067797
@@ -192,10 +216,10 @@
     [
       "city=NYC|h=all|p=0.0-0.1",
       {
-        "brier_calibrated": 0.063204,
-        "brier_delta": 0.002328,
+        "brier_calibrated": 0.063225,
+        "brier_delta": 0.002349,
         "brier_raw": 0.060876,
-        "calibrated_prob": 0.06967,
+        "calibrated_prob": 0.072765,
         "mean_pred": 0.032906,
         "n": 59,
         "obs_rate": 0.067797
@@ -204,34 +228,58 @@
     [
       "city=all|h=0-2h|p=0.0-0.1",
       {
-        "brier_calibrated": 0.063204,
-        "brier_delta": 0.002328,
-        "brier_raw": 0.060876,
-        "calibrated_prob": 0.06967,
-        "mean_pred": 0.032906,
-        "n": 59,
-        "obs_rate": 0.067797
+        "brier_calibrated": 0.091637,
+        "brier_delta": -0.001919,
+        "brier_raw": 0.093556,
+        "calibrated_prob": 0.099175,
+        "mean_pred": 0.025691,
+        "n": 147,
+        "obs_rate": 0.102041
       }
     ],
     [
       "city=all|h=all|p=0.0-0.1",
       {
-        "brier_calibrated": 0.063204,
-        "brier_delta": 0.002328,
-        "brier_raw": 0.060876,
-        "calibrated_prob": 0.06967,
-        "mean_pred": 0.032906,
-        "n": 59,
-        "obs_rate": 0.067797
+        "brier_calibrated": 0.091637,
+        "brier_delta": -0.001919,
+        "brier_raw": 0.093556,
+        "calibrated_prob": 0.099175,
+        "mean_pred": 0.025691,
+        "n": 147,
+        "obs_rate": 0.102041
+      }
+    ],
+    [
+      "city=Atlanta|h=0-2h|p=0.0-0.1",
+      {
+        "brier_calibrated": 0.10947,
+        "brier_delta": -0.005995,
+        "brier_raw": 0.115466,
+        "calibrated_prob": 0.115238,
+        "mean_pred": 0.020853,
+        "n": 88,
+        "obs_rate": 0.125
+      }
+    ],
+    [
+      "city=Atlanta|h=all|p=0.0-0.1",
+      {
+        "brier_calibrated": 0.10947,
+        "brier_delta": -0.005995,
+        "brier_raw": 0.115466,
+        "calibrated_prob": 0.115238,
+        "mean_pred": 0.020853,
+        "n": 88,
+        "obs_rate": 0.125
       }
     ],
     [
       "city=NYC|h=0-2h|p=0.1-0.2",
       {
-        "brier_calibrated": 0.230528,
-        "brier_delta": -0.021453,
+        "brier_calibrated": 0.22898,
+        "brier_delta": -0.023001,
         "brier_raw": 0.251981,
-        "calibrated_prob": 0.187262,
+        "calibrated_prob": 0.193603,
         "mean_pred": 0.142963,
         "n": 16,
         "obs_rate": 0.3125
@@ -240,10 +288,10 @@
     [
       "city=NYC|h=all|p=0.1-0.2",
       {
-        "brier_calibrated": 0.230528,
-        "brier_delta": -0.021453,
+        "brier_calibrated": 0.22898,
+        "brier_delta": -0.023001,
         "brier_raw": 0.251981,
-        "calibrated_prob": 0.187262,
+        "calibrated_prob": 0.193603,
         "mean_pred": 0.142963,
         "n": 16,
         "obs_rate": 0.3125
@@ -252,10 +300,10 @@
     [
       "city=all|h=0-2h|p=0.1-0.2",
       {
-        "brier_calibrated": 0.230528,
-        "brier_delta": -0.021453,
+        "brier_calibrated": 0.22898,
+        "brier_delta": -0.023001,
         "brier_raw": 0.251981,
-        "calibrated_prob": 0.187262,
+        "calibrated_prob": 0.193603,
         "mean_pred": 0.142963,
         "n": 16,
         "obs_rate": 0.3125
@@ -264,10 +312,10 @@
     [
       "city=all|h=all|p=0.1-0.2",
       {
-        "brier_calibrated": 0.230528,
-        "brier_delta": -0.021453,
+        "brier_calibrated": 0.22898,
+        "brier_delta": -0.023001,
         "brier_raw": 0.251981,
-        "calibrated_prob": 0.187262,
+        "calibrated_prob": 0.193603,
         "mean_pred": 0.142963,
         "n": 16,
         "obs_rate": 0.3125
@@ -276,10 +324,10 @@
     [
       "city=NYC|h=0-2h|p=0.3-0.4",
       {
-        "brier_calibrated": 0.017296,
-        "brier_delta": -0.115688,
+        "brier_calibrated": 0.01943,
+        "brier_delta": -0.113554,
         "brier_raw": 0.132984,
-        "calibrated_prob": 0.131514,
+        "calibrated_prob": 0.139392,
         "mean_pred": 0.364595,
         "n": 8,
         "obs_rate": 0.0
@@ -288,10 +336,10 @@
     [
       "city=NYC|h=all|p=0.3-0.4",
       {
-        "brier_calibrated": 0.017296,
-        "brier_delta": -0.115688,
+        "brier_calibrated": 0.01943,
+        "brier_delta": -0.113554,
         "brier_raw": 0.132984,
-        "calibrated_prob": 0.131514,
+        "calibrated_prob": 0.139392,
         "mean_pred": 0.364595,
         "n": 8,
         "obs_rate": 0.0
@@ -300,10 +348,10 @@
     [
       "city=all|h=0-2h|p=0.3-0.4",
       {
-        "brier_calibrated": 0.017296,
-        "brier_delta": -0.115688,
+        "brier_calibrated": 0.01943,
+        "brier_delta": -0.113554,
         "brier_raw": 0.132984,
-        "calibrated_prob": 0.131514,
+        "calibrated_prob": 0.139392,
         "mean_pred": 0.364595,
         "n": 8,
         "obs_rate": 0.0
@@ -312,10 +360,10 @@
     [
       "city=all|h=all|p=0.3-0.4",
       {
-        "brier_calibrated": 0.017296,
-        "brier_delta": -0.115688,
+        "brier_calibrated": 0.01943,
+        "brier_delta": -0.113554,
         "brier_raw": 0.132984,
-        "calibrated_prob": 0.131514,
+        "calibrated_prob": 0.139392,
         "mean_pred": 0.364595,
         "n": 8,
         "obs_rate": 0.0
@@ -324,10 +372,10 @@
     [
       "city=all|h=0-2h|p=0.8-0.9",
       {
-        "brier_calibrated": 0.051602,
-        "brier_delta": -0.664425,
+        "brier_calibrated": 0.055032,
+        "brier_delta": -0.660996,
         "brier_raw": 0.716027,
-        "calibrated_prob": 0.227161,
+        "calibrated_prob": 0.234588,
         "mean_pred": 0.846015,
         "n": 10,
         "obs_rate": 0.0
@@ -336,10 +384,10 @@
     [
       "city=all|h=all|p=0.8-0.9",
       {
-        "brier_calibrated": 0.051602,
-        "brier_delta": -0.664425,
+        "brier_calibrated": 0.055032,
+        "brier_delta": -0.660996,
         "brier_raw": 0.716027,
-        "calibrated_prob": 0.227161,
+        "calibrated_prob": 0.234588,
         "mean_pred": 0.846015,
         "n": 10,
         "obs_rate": 0.0

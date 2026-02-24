@@ -1,65 +1,76 @@
 {
-  "as_of_utc": "2026-02-24T07:56:59.830637+00:00",
+  "as_of_utc": "2026-02-24T08:28:48.024387+00:00",
   "closed_breakdowns": {
     "by_city": {
       "Atlanta": {
-        "avg_pnl_usd": -4.166667,
-        "avg_return_pct": -0.833333,
-        "flat": 0,
-        "losses": 1,
-        "profit_factor": 0.0,
-        "total_pnl_usd": -4.166667,
-        "trades": 1,
-        "win_rate": 0.0,
-        "wins": 0
-      },
-      "NYC": {
-        "avg_pnl_usd": 0.288109,
-        "avg_return_pct": 0.057622,
+        "avg_pnl_usd": -2.03405,
+        "avg_return_pct": -0.40681,
         "flat": 0,
         "losses": 2,
-        "profit_factor": 1.18105,
-        "total_pnl_usd": 0.864326,
+        "profit_factor": 0.334311,
+        "total_pnl_usd": -6.102151,
         "trades": 3,
         "win_rate": 0.333333,
+        "wins": 1
+      },
+      "NYC": {
+        "avg_pnl_usd": 0.091081,
+        "avg_return_pct": 0.018216,
+        "flat": 0,
+        "losses": 3,
+        "profit_factor": 1.06908,
+        "total_pnl_usd": 0.364326,
+        "trades": 4,
+        "win_rate": 0.25,
         "wins": 1
       }
     },
     "by_direction": {
       "BUY_NO": {
-        "avg_pnl_usd": 1.96094,
-        "avg_return_pct": 0.392188,
-        "flat": 0,
-        "losses": 1,
-        "profit_factor": 3.284921,
-        "total_pnl_usd": 3.92188,
-        "trades": 2,
-        "win_rate": 0.5,
-        "wins": 1
-      },
-      "BUY_YES": {
-        "avg_pnl_usd": -3.612111,
-        "avg_return_pct": -0.722422,
+        "avg_pnl_usd": 0.496599,
+        "avg_return_pct": 0.09932,
         "flat": 0,
         "losses": 2,
+        "profit_factor": 1.295752,
+        "total_pnl_usd": 1.986396,
+        "trades": 4,
+        "win_rate": 0.5,
+        "wins": 2
+      },
+      "BUY_YES": {
+        "avg_pnl_usd": -2.57474,
+        "avg_return_pct": -0.514948,
+        "flat": 0,
+        "losses": 3,
         "profit_factor": 0.0,
-        "total_pnl_usd": -7.224221,
-        "trades": 2,
+        "total_pnl_usd": -7.724221,
+        "trades": 3,
         "win_rate": 0.0,
         "wins": 0
       }
     },
     "by_entry_horizon": {
       "12-24h": {
-        "avg_pnl_usd": -2.980213,
-        "avg_return_pct": -0.596043,
+        "avg_pnl_usd": -2.36016,
+        "avg_return_pct": -0.472032,
         "flat": 0,
-        "losses": 3,
+        "losses": 4,
         "profit_factor": 0.0,
-        "total_pnl_usd": -8.940639,
-        "trades": 3,
+        "total_pnl_usd": -9.440639,
+        "trades": 4,
         "win_rate": 0.0,
         "wins": 0
+      },
+      "expired": {
+        "avg_pnl_usd": -0.967742,
+        "avg_return_pct": -0.193549,
+        "flat": 0,
+        "losses": 1,
+        "profit_factor": 0.612903,
+        "total_pnl_usd": -1.935484,
+        "trades": 2,
+        "win_rate": 0.5,
+        "wins": 1
       },
       "unknown": {
         "avg_pnl_usd": 5.638298,
@@ -75,15 +86,15 @@
     },
     "by_exit_reason": {
       "settlement": {
-        "avg_pnl_usd": 5.638298,
-        "avg_return_pct": 1.12766,
+        "avg_pnl_usd": 1.234271,
+        "avg_return_pct": 0.246854,
         "flat": 0,
-        "losses": 0,
-        "profit_factor": null,
-        "total_pnl_usd": 5.638298,
-        "trades": 1,
-        "win_rate": 1.0,
-        "wins": 1
+        "losses": 1,
+        "profit_factor": 1.740563,
+        "total_pnl_usd": 3.702814,
+        "trades": 3,
+        "win_rate": 0.666667,
+        "wins": 2
       },
       "stop_loss": {
         "avg_pnl_usd": -2.980213,
@@ -95,91 +106,114 @@
         "trades": 3,
         "win_rate": 0.0,
         "wins": 0
+      },
+      "take_profit": {
+        "avg_pnl_usd": -0.5,
+        "avg_return_pct": -0.1,
+        "flat": 0,
+        "losses": 1,
+        "profit_factor": 0.0,
+        "total_pnl_usd": -0.5,
+        "trades": 1,
+        "win_rate": 0.0,
+        "wins": 0
       }
     },
     "by_exit_regime": {
-      "default": {
-        "avg_pnl_usd": -0.825585,
-        "avg_return_pct": -0.165117,
+      "city=NYC|h=2-6h": {
+        "avg_pnl_usd": -0.5,
+        "avg_return_pct": -0.1,
         "flat": 0,
-        "losses": 3,
-        "profit_factor": 0.630637,
-        "total_pnl_usd": -3.302341,
-        "trades": 4,
-        "win_rate": 0.25,
-        "wins": 1
+        "losses": 1,
+        "profit_factor": 0.0,
+        "total_pnl_usd": -0.5,
+        "trades": 1,
+        "win_rate": 0.0,
+        "wins": 0
+      },
+      "default": {
+        "avg_pnl_usd": -0.872971,
+        "avg_return_pct": -0.174594,
+        "flat": 0,
+        "losses": 4,
+        "profit_factor": 0.624277,
+        "total_pnl_usd": -5.237825,
+        "trades": 6,
+        "win_rate": 0.333333,
+        "wins": 2
       }
     },
     "by_exit_regime_horizon": {
-      "unknown": {
-        "avg_pnl_usd": -0.825585,
-        "avg_return_pct": -0.165117,
+      "2-6h": {
+        "avg_pnl_usd": -0.5,
+        "avg_return_pct": -0.1,
         "flat": 0,
-        "losses": 3,
-        "profit_factor": 0.630637,
-        "total_pnl_usd": -3.302341,
-        "trades": 4,
-        "win_rate": 0.25,
-        "wins": 1
+        "losses": 1,
+        "profit_factor": 0.0,
+        "total_pnl_usd": -0.5,
+        "trades": 1,
+        "win_rate": 0.0,
+        "wins": 0
+      },
+      "unknown": {
+        "avg_pnl_usd": -0.872971,
+        "avg_return_pct": -0.174594,
+        "flat": 0,
+        "losses": 4,
+        "profit_factor": 0.624277,
+        "total_pnl_usd": -5.237825,
+        "trades": 6,
+        "win_rate": 0.333333,
+        "wins": 2
       }
     }
   },
   "closed_counts": {
     "event_types": {
-      "paper_mark_exit_trade": 3,
-      "paper_settlement_trade": 1
+      "paper_mark_exit_trade": 4,
+      "paper_settlement_trade": 3
     },
     "exit_reasons": {
-      "settlement": 1,
-      "stop_loss": 3
+      "settlement": 3,
+      "stop_loss": 3,
+      "take_profit": 1
     }
   },
   "closed_summary": {
-    "avg_pnl_usd": -0.825585,
-    "avg_return_pct": -0.165117,
+    "avg_pnl_usd": -0.819689,
+    "avg_return_pct": -0.163938,
     "flat": 0,
-    "losses": 3,
-    "profit_factor": 0.630637,
-    "total_pnl_usd": -3.302341,
-    "trades": 4,
-    "win_rate": 0.25,
-    "wins": 1
+    "losses": 5,
+    "profit_factor": 0.602661,
+    "total_pnl_usd": -5.737825,
+    "trades": 7,
+    "win_rate": 0.285714,
+    "wins": 2
   },
   "ledger_path": "data/sample/paper_settlement_ledger.jsonl",
   "mark_source_path": "data/sample/feature_rows_export.jsonl",
   "open_breakdowns": {
     "by_city": {
       "Atlanta": {
-        "avg_pnl_usd": -0.719697,
-        "avg_return_pct": -0.143939,
+        "avg_pnl_usd": -0.189394,
+        "avg_return_pct": -0.037879,
         "flat": 0,
         "losses": 1,
         "profit_factor": 0.0,
-        "total_pnl_usd": -0.719697,
+        "total_pnl_usd": -0.189394,
         "trades": 1,
         "win_rate": 0.0,
         "wins": 0
       },
       "Dallas": {
-        "avg_pnl_usd": 0.038719,
-        "avg_return_pct": 0.007744,
+        "avg_pnl_usd": 0.10211,
+        "avg_return_pct": 0.020422,
         "flat": 0,
         "losses": 1,
-        "profit_factor": 1.283205,
-        "total_pnl_usd": 0.077439,
+        "profit_factor": 1.871343,
+        "total_pnl_usd": 0.204221,
         "trades": 2,
         "win_rate": 0.5,
-        "wins": 1
-      },
-      "NYC": {
-        "avg_pnl_usd": 0.75,
-        "avg_return_pct": 0.15,
-        "flat": 0,
-        "losses": 0,
-        "profit_factor": null,
-        "total_pnl_usd": 0.75,
-        "trades": 1,
-        "win_rate": 1.0,
         "wins": 1
       },
       "Seattle": {
@@ -196,47 +230,47 @@
     },
     "by_direction": {
       "BUY_NO": {
-        "avg_pnl_usd": -0.214086,
-        "avg_return_pct": -0.042817,
+        "avg_pnl_usd": 0.004942,
+        "avg_return_pct": 0.000988,
         "flat": 0,
         "losses": 2,
-        "profit_factor": 0.353302,
-        "total_pnl_usd": -0.642258,
+        "profit_factor": 1.034988,
+        "total_pnl_usd": 0.014827,
         "trades": 3,
         "win_rate": 0.333333,
         "wins": 1
       },
       "BUY_YES": {
-        "avg_pnl_usd": -0.071429,
-        "avg_return_pct": -0.014286,
+        "avg_pnl_usd": -0.892857,
+        "avg_return_pct": -0.178571,
         "flat": 0,
         "losses": 1,
-        "profit_factor": 0.84,
-        "total_pnl_usd": -0.142857,
-        "trades": 2,
-        "win_rate": 0.5,
-        "wins": 1
+        "profit_factor": 0.0,
+        "total_pnl_usd": -0.892857,
+        "trades": 1,
+        "win_rate": 0.0,
+        "wins": 0
       }
     },
     "by_entry_horizon": {
       "12-24h": {
-        "avg_pnl_usd": -0.283998,
-        "avg_return_pct": -0.0568,
+        "avg_pnl_usd": -0.438875,
+        "avg_return_pct": -0.087775,
         "flat": 0,
         "losses": 3,
-        "profit_factor": 0.397669,
-        "total_pnl_usd": -1.135992,
-        "trades": 4,
-        "win_rate": 0.25,
-        "wins": 1
+        "profit_factor": 0.0,
+        "total_pnl_usd": -1.316626,
+        "trades": 3,
+        "win_rate": 0.0,
+        "wins": 0
       },
       "2-6h": {
-        "avg_pnl_usd": 0.350877,
-        "avg_return_pct": 0.070175,
+        "avg_pnl_usd": 0.438596,
+        "avg_return_pct": 0.087719,
         "flat": 0,
         "losses": 0,
         "profit_factor": null,
-        "total_pnl_usd": 0.350877,
+        "total_pnl_usd": 0.438596,
         "trades": 1,
         "win_rate": 1.0,
         "wins": 1
@@ -250,7 +284,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.14,
       "event_slug": "",
-      "hours_to_target_now": 1.050047,
+      "hours_to_target_now": 0.519993,
       "mark_position_price": 0.115,
       "mark_quote_time_utc": "2026-02-23T15:34:33.606858+00:00",
       "mark_yes_mid": 0.115,
@@ -264,60 +298,19 @@
     {
       "city": "Atlanta",
       "direction": "BUY_NO",
-      "entry_horizon_bucket": "expired",
-      "entry_price": 0.64,
-      "event_slug": "highest-temperature-in-atlanta-on-february-23-2026",
-      "hours_to_target_now": -19.949953,
-      "market_id": "1407238",
-      "signal_time_utc": "2026-02-23T12:50:57.632777+00:00",
-      "size_usd": 5.0,
-      "target_time_utc": "2026-02-23T12:00:00+00:00"
-    },
-    {
-      "city": "Atlanta",
-      "direction": "BUY_NO",
-      "entry_horizon_bucket": "expired",
-      "entry_price": 0.62,
-      "event_slug": "highest-temperature-in-atlanta-on-february-23-2026",
-      "hours_to_target_now": -19.949953,
-      "market_id": "1407239",
-      "signal_time_utc": "2026-02-23T12:56:31.843668+00:00",
-      "size_usd": 5.0,
-      "target_time_utc": "2026-02-23T12:00:00+00:00"
-    },
-    {
-      "city": "Atlanta",
-      "direction": "BUY_NO",
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.6599999999999999,
       "event_slug": "highest-temperature-in-atlanta-on-february-24-2026",
-      "hours_to_target_now": 4.050047,
-      "mark_position_price": 0.565,
-      "mark_quote_time_utc": "2026-02-24T07:48:30.045998+00:00",
-      "mark_yes_mid": 0.435,
+      "hours_to_target_now": 3.519993,
+      "mark_position_price": 0.635,
+      "mark_quote_time_utc": "2026-02-24T08:16:47.166480+00:00",
+      "mark_yes_mid": 0.365,
       "market_id": "1413721",
       "signal_time_utc": "2026-02-23T15:35:19.232299+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-24T12:00:00+00:00",
-      "unrealized_pnl_usd": -0.719697,
-      "unrealized_return_pct": -0.143939
-    },
-    {
-      "city": "NYC",
-      "direction": "BUY_YES",
-      "entry_horizon_bucket": "12-24h",
-      "entry_price": 0.01,
-      "event_slug": "highest-temperature-in-nyc-on-february-24-2026",
-      "hours_to_target_now": 4.050047,
-      "mark_position_price": 0.0115,
-      "mark_quote_time_utc": "2026-02-24T07:48:29.048720+00:00",
-      "mark_yes_mid": 0.0115,
-      "market_id": "1413703",
-      "signal_time_utc": "2026-02-23T20:42:43.944821+00:00",
-      "size_usd": 5.0,
-      "target_time_utc": "2026-02-24T12:00:00+00:00",
-      "unrealized_pnl_usd": 0.75,
-      "unrealized_return_pct": 0.15
+      "unrealized_pnl_usd": -0.189394,
+      "unrealized_return_pct": -0.037879
     },
     {
       "city": "Dallas",
@@ -325,16 +318,16 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.64,
       "event_slug": "highest-temperature-in-dallas-on-february-24-2026",
-      "hours_to_target_now": 4.050047,
-      "mark_position_price": 0.605,
-      "mark_quote_time_utc": "2026-02-24T07:48:38.145409+00:00",
-      "mark_yes_mid": 0.395,
+      "hours_to_target_now": 3.519993,
+      "mark_position_price": 0.61,
+      "mark_quote_time_utc": "2026-02-24T08:21:07.122493+00:00",
+      "mark_yes_mid": 0.39,
       "market_id": "1413709",
       "signal_time_utc": "2026-02-23T23:57:48.809885+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-24T12:00:00+00:00",
-      "unrealized_pnl_usd": -0.273438,
-      "unrealized_return_pct": -0.054688
+      "unrealized_pnl_usd": -0.234375,
+      "unrealized_return_pct": -0.046875
     },
     {
       "city": "Dallas",
@@ -342,40 +335,40 @@
       "entry_horizon_bucket": "2-6h",
       "entry_price": 0.5700000000000001,
       "event_slug": "highest-temperature-in-dallas-on-february-24-2026",
-      "hours_to_target_now": 4.050047,
-      "mark_position_price": 0.61,
-      "mark_quote_time_utc": "2026-02-24T07:48:42.107551+00:00",
-      "mark_yes_mid": 0.39,
+      "hours_to_target_now": 3.519993,
+      "mark_position_price": 0.62,
+      "mark_quote_time_utc": "2026-02-24T08:21:11.192922+00:00",
+      "mark_yes_mid": 0.38,
       "market_id": "1413708",
       "signal_time_utc": "2026-02-24T06:52:03.837206+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-24T12:00:00+00:00",
-      "unrealized_pnl_usd": 0.350877,
-      "unrealized_return_pct": 0.070175
+      "unrealized_pnl_usd": 0.438596,
+      "unrealized_return_pct": 0.087719
     }
   ],
   "open_summary": {
-    "gross_open_exposure_usd": 35.0,
-    "marked_open_positions": 5,
-    "open_positions": 7,
-    "realized_pnl_from_state_usd": -3.302341,
-    "total_pnl_including_open_usd": -4.087455,
-    "unmarked_open_positions": 2,
-    "unrealized_pnl_usd": -0.785114
+    "gross_open_exposure_usd": 20.0,
+    "marked_open_positions": 4,
+    "open_positions": 4,
+    "realized_pnl_from_state_usd": -5.737825,
+    "total_pnl_including_open_usd": -6.615854,
+    "unmarked_open_positions": 0,
+    "unrealized_pnl_usd": -0.87803
   },
   "state_path": "data/sample/paper_settlement_state.json",
   "tuning_candidates": {
     "by_exit_reason": {
       "settlement": {
-        "avg_pnl_usd": 5.638298,
-        "avg_return_pct": 1.12766,
+        "avg_pnl_usd": 1.234271,
+        "avg_return_pct": 0.246854,
         "flat": 0,
-        "losses": 0,
-        "profit_factor": null,
-        "total_pnl_usd": 5.638298,
-        "trades": 1,
-        "win_rate": 1.0,
-        "wins": 1
+        "losses": 1,
+        "profit_factor": 1.740563,
+        "total_pnl_usd": 3.702814,
+        "trades": 3,
+        "win_rate": 0.666667,
+        "wins": 2
       },
       "stop_loss": {
         "avg_pnl_usd": -2.980213,
@@ -387,29 +380,51 @@
         "trades": 3,
         "win_rate": 0.0,
         "wins": 0
+      },
+      "take_profit": {
+        "avg_pnl_usd": -0.5,
+        "avg_return_pct": -0.1,
+        "flat": 0,
+        "losses": 1,
+        "profit_factor": 0.0,
+        "total_pnl_usd": -0.5,
+        "trades": 1,
+        "win_rate": 0.0,
+        "wins": 0
       }
     },
     "by_regime": {
-      "default": {
-        "avg_pnl_usd": -0.825585,
-        "avg_return_pct": -0.165117,
+      "city=NYC|h=2-6h": {
+        "avg_pnl_usd": -0.5,
+        "avg_return_pct": -0.1,
         "flat": 0,
-        "losses": 3,
-        "profit_factor": 0.630637,
-        "total_pnl_usd": -3.302341,
-        "trades": 4,
-        "win_rate": 0.25,
-        "wins": 1
+        "losses": 1,
+        "profit_factor": 0.0,
+        "total_pnl_usd": -0.5,
+        "trades": 1,
+        "win_rate": 0.0,
+        "wins": 0
+      },
+      "default": {
+        "avg_pnl_usd": -0.872971,
+        "avg_return_pct": -0.174594,
+        "flat": 0,
+        "losses": 4,
+        "profit_factor": 0.624277,
+        "total_pnl_usd": -5.237825,
+        "trades": 6,
+        "win_rate": 0.333333,
+        "wins": 2
       }
     },
     "suggestions": [
       {
         "reason": "negative pnl with low win rate",
         "regime": "default",
-        "total_pnl_usd": -3.302341,
-        "trades": 4,
+        "total_pnl_usd": -5.237825,
+        "trades": 6,
         "type": "review_regime",
-        "win_rate": 0.25
+        "win_rate": 0.333333
       }
     ]
   }

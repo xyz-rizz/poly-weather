@@ -1,9 +1,12 @@
 {
-  "as_of_utc": "2026-02-24T07:56:59.684252+00:00",
+  "as_of_utc": "2026-02-24T08:28:47.872772+00:00",
   "closed_market_ids": [
     "1407218",
+    "1407238",
+    "1407239",
     "1413700",
     "1413702",
+    "1413703",
     "1413715"
   ],
   "open_positions": [
@@ -21,43 +24,10 @@
     {
       "city": "Atlanta",
       "direction": "BUY_NO",
-      "entry_price": 0.64,
-      "event_slug": "highest-temperature-in-atlanta-on-february-23-2026",
-      "market_id": "1407238",
-      "signal_time_utc": "2026-02-23T12:50:57.632777+00:00",
-      "size_usd": 5.0,
-      "source_event_type": "signal",
-      "target_time_utc": "2026-02-23T12:00:00+00:00"
-    },
-    {
-      "city": "Atlanta",
-      "direction": "BUY_NO",
-      "entry_price": 0.62,
-      "event_slug": "highest-temperature-in-atlanta-on-february-23-2026",
-      "market_id": "1407239",
-      "signal_time_utc": "2026-02-23T12:56:31.843668+00:00",
-      "size_usd": 5.0,
-      "source_event_type": "signal",
-      "target_time_utc": "2026-02-23T12:00:00+00:00"
-    },
-    {
-      "city": "Atlanta",
-      "direction": "BUY_NO",
       "entry_price": 0.6599999999999999,
       "event_slug": "highest-temperature-in-atlanta-on-february-24-2026",
       "market_id": "1413721",
       "signal_time_utc": "2026-02-23T15:35:19.232299+00:00",
-      "size_usd": 5.0,
-      "source_event_type": "signal",
-      "target_time_utc": "2026-02-24T12:00:00+00:00"
-    },
-    {
-      "city": "NYC",
-      "direction": "BUY_YES",
-      "entry_price": 0.01,
-      "event_slug": "highest-temperature-in-nyc-on-february-24-2026",
-      "market_id": "1413703",
-      "signal_time_utc": "2026-02-23T20:42:43.944821+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-24T12:00:00+00:00"
@@ -85,6 +55,6 @@
       "target_time_utc": "2026-02-24T12:00:00+00:00"
     }
   ],
-  "realized_pnl_usd": -3.302340661608536,
-  "settled_trades": 1
+  "realized_pnl_usd": -5.737824532576278,
+  "settled_trades": 3
 }
