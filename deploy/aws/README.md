@@ -88,6 +88,7 @@ sudo systemctl list-timers | rg weather-bot-settlement
 ```
 
 This checks every ~15 minutes and runs calibration refresh only when new settled markets overlap your stored scans.
+It also runs the paper settlement reconciler to realize paper PnL on settled markets.
 
 Fallback daily mode (optional, can run alongside trigger):
 
@@ -108,6 +109,13 @@ Manual trigger check:
 ```bash
 sudo systemctl start weather-bot-settlement-trigger.service
 journalctl -u weather-bot-settlement-trigger.service -n 200 --no-pager
+```
+
+Manual paper settlement reconcile (independent):
+
+```bash
+sudo systemctl start weather-bot-paper-settlement-reconcile.service
+journalctl -u weather-bot-paper-settlement-reconcile.service -n 200 --no-pager
 ```
 
 ## Optional: Git Autosave Every 30 Minutes
@@ -140,6 +148,9 @@ Notes:
 - `data/sample/calibration_walkforward_report.json`
 - `data/sample/threshold_sweep_report.json`
 - `data/sample/settlement_trigger_state.json`
+- `data/sample/paper_settlement_state.json`
+- `data/sample/paper_settlement_ledger.jsonl`
+- `data/sample/paper_settlement_report.json`
 
 ## Security Notes (Important)
 

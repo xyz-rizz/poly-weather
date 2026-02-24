@@ -8,6 +8,7 @@ from typing import Any
 
 from weather_bot.calibration_refresh import run_calibration_refresh
 from weather_bot.feature_export import export_feature_rows
+from weather_bot.paper_settlement_reconcile import run_paper_settlement_reconcile
 
 
 def _iso_now() -> str:
@@ -59,12 +60,14 @@ def run_settlement_trigger() -> dict[str, Any]:
 
     should_trigger = force or (new_matched >= min_new_matches)
     refresh_result: dict[str, Any] | None = None
+    paper_settlement_result: dict[str, Any] | None = None
     action = "skip"
     reason = "no new matched settled markets"
     if should_trigger:
         action = "refresh"
         reason = "forced" if force else f"new matched settled markets: +{new_matched}"
         refresh_result = run_calibration_refresh()
+        paper_settlement_result = run_paper_settlement_reconcile()
 
     next_state = {
         "last_checked_utc": _iso_now(),
@@ -84,6 +87,18 @@ def run_settlement_trigger() -> dict[str, Any]:
         next_state["last_refresh_export"] = refresh_result.get("export")
         next_state["last_refresh_effectiveness_summary"] = refresh_result.get("effectiveness_summary")
         next_state["last_refresh_walkforward_summary"] = refresh_result.get("walkforward_summary")
+    if paper_settlement_result is not None:
+        next_state["last_paper_settlement_utc"] = _iso_now()
+        next_state["last_paper_settlement_summary"] = {
+            k: paper_settlement_result.get(k)
+            for k in (
+                "open_positions",
+                "settled_this_run",
+                "realized_pnl_delta_usd",
+                "realized_pnl_total_usd",
+                "settled_trades_total",
+            )
+        }
     _write_json(state_path, next_state)
 
     return {
@@ -106,6 +121,7 @@ def run_settlement_trigger() -> dict[str, Any]:
             "target_time_max": export_result.get("target_time_max"),
         },
         "refresh_result": refresh_result,
+        "paper_settlement_result": paper_settlement_result,
         "state_path": str(state_path),
     }
 
@@ -117,4 +133,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
