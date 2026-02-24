@@ -1,15 +1,15 @@
 {
   "distinct_markets": 57,
   "last_action": "skip",
-  "last_checked_utc": "2026-02-24T09:14:48.521491+00:00",
+  "last_checked_utc": "2026-02-24T09:30:43.500703+00:00",
   "last_paper_performance_summary": {
     "closed_total_pnl_usd": -5.737825,
     "closed_trades": 7,
     "open_positions": 4,
-    "open_unrealized_pnl_usd": -2.031464,
-    "total_pnl_including_open_usd": -7.769288
+    "open_unrealized_pnl_usd": -1.385531,
+    "total_pnl_including_open_usd": -7.123355
   },
-  "last_paper_performance_utc": "2026-02-24T09:14:48.521513+00:00",
+  "last_paper_performance_utc": "2026-02-24T09:30:43.500724+00:00",
   "last_paper_settlement_summary": {
     "closed_this_run": 0,
     "mark_exits_this_run": 0,
@@ -21,12 +21,12 @@
     "settled_this_run": 0,
     "settled_trades_total": 3
   },
-  "last_paper_settlement_utc": "2026-02-24T09:14:48.521506+00:00",
+  "last_paper_settlement_utc": "2026-02-24T09:30:43.500718+00:00",
   "last_reason": "no new matched settled markets",
   "matched_market_ids": 27,
   "resolved_market_ids_available": 501,
   "rows_with_outcome": 2214,
-  "snapshot_time_max": "2026-02-24T09:11:07.393261+00:00",
+  "snapshot_time_max": "2026-02-24T09:25:43.883833+00:00",
   "snapshot_time_min": "2026-02-23T12:14:23.508144+00:00",
   "target_time_max": "2026-02-24T12:00:00+00:00",
   "target_time_min": "2026-02-23T12:00:00+00:00"
