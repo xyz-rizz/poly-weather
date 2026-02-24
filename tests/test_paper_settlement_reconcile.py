@@ -44,12 +44,16 @@ def test_mark_exit_take_profit_buy_yes():
         core_trailing_enabled=True,
         core_trailing_drawdown_pct=0.15,
         core_trailing_min_peak_return_pct=0.25,
+        min_hold_minutes_before_stop_loss=0,
+        max_spread_for_stop_loss=1.0,
+        max_spread_for_take_profit=1.0,
     )
     assert decision is not None
-    exit_price, reason, ret_mark, _ = decision
+    exit_price, reason, ret_mark, _, ret_exec, _ = decision
     assert reason == "take_profit"
     assert round(exit_price, 6) == 0.31  # uses conservative bid for exit
     assert ret_mark > 0.35  # trigger checks mark-mid return
+    assert ret_exec > 0.35
 
 
 def test_mark_exit_time_stop_after_target_grace():
@@ -85,9 +89,12 @@ def test_mark_exit_time_stop_after_target_grace():
         core_trailing_enabled=True,
         core_trailing_drawdown_pct=0.15,
         core_trailing_min_peak_return_pct=0.25,
+        min_hold_minutes_before_stop_loss=0,
+        max_spread_for_stop_loss=1.0,
+        max_spread_for_take_profit=1.0,
     )
     assert decision is not None
-    exit_price, reason, _, _ = decision
+    exit_price, reason, _, _, _, _ = decision
     assert reason == "time_stop"
     assert round(exit_price, 6) == 0.58  # conservative no-bid fill for BUY_NO
 
@@ -173,9 +180,12 @@ def test_mark_exit_break_even_after_partial_tp():
         core_trailing_enabled=False,
         core_trailing_drawdown_pct=0.15,
         core_trailing_min_peak_return_pct=0.25,
+        min_hold_minutes_before_stop_loss=0,
+        max_spread_for_stop_loss=1.0,
+        max_spread_for_take_profit=1.0,
     )
     assert decision is not None
-    _, reason, _, _ = decision
+    _, reason, _, _, _, _ = decision
     assert reason == "break_even_stop"
 
 
@@ -215,7 +225,51 @@ def test_mark_exit_trailing_after_partial_tp():
         core_trailing_enabled=True,
         core_trailing_drawdown_pct=0.15,
         core_trailing_min_peak_return_pct=0.25,
+        min_hold_minutes_before_stop_loss=0,
+        max_spread_for_stop_loss=1.0,
+        max_spread_for_take_profit=1.0,
     )
     assert decision is not None
-    _, reason, _, _ = decision
+    _, reason, _, _, _, _ = decision
     assert reason == "trailing_stop"
+
+
+def test_stop_loss_requires_min_hold_and_respects_spread():
+    now = datetime.now(UTC)
+    pos = PaperSignalPosition(
+        market_id="m5",
+        event_slug="e5",
+        city="Seattle",
+        direction="BUY_YES",
+        size_usd=5.0,
+        original_size_usd=5.0,
+        entry_price=0.4,
+        signal_time_utc=now - timedelta(minutes=5),
+        target_time_utc=now + timedelta(hours=3),
+    )
+    row = {
+        "implied_yes_mid": 0.28,
+        "yes_bid": 0.20,
+        "yes_ask": 0.36,  # wide spread
+        "quote_time_utc": now.isoformat(),
+    }
+    reg = _select_exit_regime(
+        pos,
+        now_utc=now,
+        profile={"all": {"all": {"take_profit_pct": 0.8, "stop_loss_pct": 0.2, "time_stop_grace_seconds": 300, "mark_fresh_seconds": 1800}}},
+    )
+    decision = _mark_exit_price_and_reason(
+        pos,
+        row,
+        now_utc=now,
+        regime=reg,
+        core_break_even_enabled=True,
+        core_break_even_buffer_pct=0.02,
+        core_trailing_enabled=True,
+        core_trailing_drawdown_pct=0.15,
+        core_trailing_min_peak_return_pct=0.25,
+        min_hold_minutes_before_stop_loss=20,
+        max_spread_for_stop_loss=0.12,
+        max_spread_for_take_profit=1.0,
+    )
+    assert decision is None

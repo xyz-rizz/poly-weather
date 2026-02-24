@@ -108,6 +108,7 @@ def export_feature_rows(
     universe_level: str = "tier1",
     days_back: int = 30,
     insecure_ssl: bool = False,
+    label_min_hours_to_end: float = 0.0,
 ) -> dict[str, Any]:
     rows = _read_jsonl(base_dir / "scan_snapshots.jsonl")
     rows = [r for r in rows if r.get("event_type") == "scan_snapshot"]
@@ -166,6 +167,8 @@ def export_feature_rows(
     outcome_count = 0
     matched_market_ids: set[str] = set()
     resolved_market_ids_available = 0
+    label_skipped_post_target = 0
+    label_skipped_missing_time = 0
     if attach_outcomes:
         http = JsonHttpClient(verify_ssl=not insecure_ssl)
         outcomes = fetch_settled_weather_outcomes(
@@ -182,6 +185,24 @@ def export_feature_rows(
             if out is None:
                 fr["label_yes"] = None
                 fr["resolved"] = False
+                continue
+            hrs = fr.get("hours_to_end")
+            hrs_f = None
+            try:
+                hrs_f = None if hrs is None else float(hrs)
+            except Exception:
+                hrs_f = None
+            if hrs_f is None:
+                fr["label_yes"] = None
+                fr["resolved"] = False
+                fr["label_skip_reason"] = "missing_hours_to_end"
+                label_skipped_missing_time += 1
+                continue
+            if hrs_f < float(label_min_hours_to_end):
+                fr["label_yes"] = None
+                fr["resolved"] = False
+                fr["label_skip_reason"] = "post_target_snapshot"
+                label_skipped_post_target += 1
                 continue
             fr["label_yes"] = out.outcome_yes
             fr["resolved"] = True
@@ -207,6 +228,9 @@ def export_feature_rows(
         "distinct_markets": len(distinct_market_ids),
         "matched_market_ids": len(matched_market_ids),
         "resolved_market_ids_available": resolved_market_ids_available,
+        "label_min_hours_to_end": label_min_hours_to_end,
+        "label_skipped_post_target": label_skipped_post_target,
+        "label_skipped_missing_time": label_skipped_missing_time,
         "snapshot_time_min": snapshot_times[0] if snapshot_times else None,
         "snapshot_time_max": snapshot_times[-1] if snapshot_times else None,
         "target_time_min": target_times[0] if target_times else None,
@@ -228,6 +252,7 @@ def main() -> int:
         universe_level=os.getenv("WEATHER_BOT_UNIVERSE", "tier1"),
         days_back=int(os.getenv("WEATHER_BOT_CAL_DAYS_BACK", "30")),
         insecure_ssl=os.getenv("WEATHER_BOT_INSECURE_SSL", "0").strip().lower() in {"1", "true", "yes"},
+        label_min_hours_to_end=float(os.getenv("WEATHER_BOT_FEATURE_LABEL_MIN_HOURS_TO_END", "0")),
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0

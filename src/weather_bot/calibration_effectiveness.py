@@ -155,11 +155,13 @@ def calibration_effectiveness_report(
     for r in rows:
         y = _to_int(r.get("label_yes"))
         raw = _to_float(r.get("model_prob_yes"))
+        hours_to_end = _to_float(r.get("hours_to_end"))
         if y is None or raw is None:
             continue
         if restrict_status and str(r.get("status") or "") != restrict_status:
             continue
-        hours_to_end = _to_float(r.get("hours_to_end"))
+        if hours_to_end is None or hours_to_end < 0.0:
+            continue
         city = str(r.get("city") or "unknown")
         adj = calibrate_probability_from_profile(profile, raw_prob=raw, city=city, hours_to_end=hours_to_end)
         row = dict(r)
@@ -263,4 +265,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

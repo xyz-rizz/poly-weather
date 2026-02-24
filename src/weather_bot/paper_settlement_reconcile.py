@@ -367,7 +367,10 @@ def _mark_exit_price_and_reason(
     core_trailing_enabled: bool,
     core_trailing_drawdown_pct: float,
     core_trailing_min_peak_return_pct: float,
-) -> tuple[float, str, float, float] | None:
+    min_hold_minutes_before_stop_loss: float,
+    max_spread_for_stop_loss: float,
+    max_spread_for_take_profit: float,
+) -> tuple[float, str, float, float, float, float] | None:
     quote_ts = _parse_dt(mark_row.get("quote_time_utc")) or _parse_dt(mark_row.get("snapshot_time_utc"))
     if quote_ts is None:
         return None
@@ -380,6 +383,12 @@ def _mark_exit_price_and_reason(
     yes_ask = _as_float(mark_row.get("yes_ask"))
     no_bid = _as_float(mark_row.get("no_bid"))
     no_ask = _as_float(mark_row.get("no_ask"))
+    yes_spread = None
+    no_spread = None
+    if yes_bid is not None and yes_ask is not None:
+        yes_spread = max(0.0, yes_ask - yes_bid)
+    if no_bid is not None and no_ask is not None:
+        no_spread = max(0.0, no_ask - no_bid)
 
     mark_yes = implied_mid
     if mark_yes is None and yes_bid is not None and yes_ask is not None:
@@ -391,12 +400,15 @@ def _mark_exit_price_and_reason(
     if pos.direction == "BUY_YES":
         mark_pos = mark_yes
         exit_fill = yes_bid if yes_bid is not None else mark_yes
+        pos_spread = yes_spread
     else:
         mark_pos = 1.0 - mark_yes
         exit_fill = no_bid if no_bid is not None else (1.0 - mark_yes)
+        pos_spread = no_spread
     exit_fill = max(0.001, min(0.999, exit_fill))
 
     ret = (mark_pos - pos.entry_price) / max(pos.entry_price, 1e-9)
+    ret_exec = (exit_fill - pos.entry_price) / max(pos.entry_price, 1e-9)
     shares = pos.size_usd / max(pos.entry_price, 1e-9)
     unrealized_pnl = shares * (mark_pos - pos.entry_price)
     prev_peak = pos.peak_mark_return_pct
@@ -404,16 +416,23 @@ def _mark_exit_price_and_reason(
         pos.peak_mark_return_pct = ret
 
     reason = None
-    if ret >= regime.take_profit_pct:
+    hold_minutes = max(0.0, (now_utc - pos.signal_time_utc).total_seconds() / 60.0)
+    if pos_spread is not None and pos_spread > max_spread_for_take_profit and ret_exec < regime.take_profit_pct:
+        pass
+    elif ret_exec >= regime.take_profit_pct:
         reason = "take_profit"
     elif pos.partial_tp_taken and core_trailing_enabled:
         peak = pos.peak_mark_return_pct if pos.peak_mark_return_pct is not None else ret
-        if peak >= core_trailing_min_peak_return_pct and ret <= (peak - abs(core_trailing_drawdown_pct)):
+        if peak >= core_trailing_min_peak_return_pct and ret_exec <= (peak - abs(core_trailing_drawdown_pct)):
             reason = "trailing_stop"
     elif pos.partial_tp_taken and core_break_even_enabled:
-        if ret <= core_break_even_buffer_pct:
+        if ret_exec <= core_break_even_buffer_pct:
             reason = "break_even_stop"
-    elif ret <= -abs(regime.stop_loss_pct):
+    elif (
+        hold_minutes >= max(0.0, min_hold_minutes_before_stop_loss)
+        and (pos_spread is None or pos_spread <= max_spread_for_stop_loss)
+        and ret_exec <= -abs(regime.stop_loss_pct)
+    ):
         reason = "stop_loss"
     else:
         target_time = pos.target_time_utc or _parse_dt(mark_row.get("target_time_utc"))
@@ -421,7 +440,7 @@ def _mark_exit_price_and_reason(
             reason = "time_stop"
     if reason is None:
         return None
-    return exit_fill, reason, ret, unrealized_pnl
+    return exit_fill, reason, ret, unrealized_pnl, ret_exec, pos_spread or 0.0
 
 
 def _mark_yes_mid_from_row(row: dict[str, Any]) -> float | None:
@@ -458,6 +477,9 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
     core_trailing_enabled = os.getenv("WEATHER_BOT_PAPER_CORE_TRAILING_ENABLED", "1").strip().lower() in {"1", "true", "yes"}
     core_trailing_drawdown_pct = float(os.getenv("WEATHER_BOT_PAPER_CORE_TRAILING_DRAWDOWN_PCT", "0.15"))
     core_trailing_min_peak_return_pct = float(os.getenv("WEATHER_BOT_PAPER_CORE_TRAILING_MIN_PEAK_RETURN_PCT", "0.25"))
+    min_hold_minutes_before_stop_loss = float(os.getenv("WEATHER_BOT_PAPER_MIN_HOLD_MINUTES_BEFORE_SL", "20"))
+    max_spread_for_stop_loss = float(os.getenv("WEATHER_BOT_PAPER_MAX_SPREAD_FOR_SL", "0.12"))
+    max_spread_for_take_profit = float(os.getenv("WEATHER_BOT_PAPER_MAX_SPREAD_FOR_TP", "0.18"))
     exit_regime_profile = _load_exit_regime_profile(
         base_dir=base_dir,
         default_take_profit_pct=take_profit_pct,
@@ -601,10 +623,13 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
                 core_trailing_enabled=core_trailing_enabled,
                 core_trailing_drawdown_pct=core_trailing_drawdown_pct,
                 core_trailing_min_peak_return_pct=core_trailing_min_peak_return_pct,
+                min_hold_minutes_before_stop_loss=min_hold_minutes_before_stop_loss,
+                max_spread_for_stop_loss=max_spread_for_stop_loss,
+                max_spread_for_take_profit=max_spread_for_take_profit,
             )
             if decision is None:
                 continue
-            exit_price, exit_reason, ret_mark, _ = decision
+            exit_price, exit_reason, ret_mark, _, ret_exec, yes_spread = decision
             close_size_usd = pos.size_usd
             partial_exit = False
             if (
@@ -657,6 +682,8 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
                     "mark_quote_time_utc": _parse_dt(row.get("quote_time_utc")) or _parse_dt(row.get("snapshot_time_utc")),
                     "mark_reason": exit_reason,
                     "mark_return_at_mid_pct": round(ret_mark, 6),
+                    "mark_return_at_exec_pct": round(ret_exec, 6),
+                    "mark_yes_spread": round(yes_spread, 6),
                     "mark_source": "feature_rows_export_or_scan_snapshot",
                     "exit_regime_key": regime.key,
                     "exit_regime_city": regime.city_key,
@@ -718,6 +745,9 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
         "core_trailing_enabled": core_trailing_enabled,
         "core_trailing_drawdown_pct": core_trailing_drawdown_pct,
         "core_trailing_min_peak_return_pct": core_trailing_min_peak_return_pct,
+        "min_hold_minutes_before_stop_loss": min_hold_minutes_before_stop_loss,
+        "max_spread_for_stop_loss": max_spread_for_stop_loss,
+        "max_spread_for_take_profit": max_spread_for_take_profit,
         "exit_regime_profile_enabled": bool(os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_PATH", "").strip() or os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_JSON", "").strip()),
     }
     report_path = Path(os.getenv("WEATHER_BOT_PAPER_SETTLEMENT_REPORT", str(base_dir / "paper_settlement_report.json")))

@@ -45,6 +45,15 @@ def _round(v: float | None) -> float | None:
     return round(v, 6)
 
 
+def _ts_key(row: dict[str, Any]) -> tuple[int, str]:
+    # Stable ordering for "first actionable snapshot" selection.
+    for key in ("snapshot_time_utc", "quote_time_utc", "created_at_utc"):
+        val = row.get(key)
+        if isinstance(val, str) and val:
+            return (0, val)
+    return (1, str(row.get("market_id") or ""))
+
+
 def _conservative_resolution_trade_proxy(row: dict[str, Any], *, stake_usd: float) -> dict[str, float] | None:
     edge = _f(row.get("edge"))
     label_yes = _i(row.get("label_yes"))
@@ -89,6 +98,9 @@ def threshold_sweep_report(
     stake_usd: float = 5.0,
     max_spread: float = 0.18,
     statuses: set[str] | None = None,
+    dedupe_market: bool = True,
+    max_positions_per_event: int = 1,
+    min_hours_to_end: float = 0.0,
 ) -> dict[str, Any]:
     rows = _read_jsonl(feature_rows_path)
     candidates: list[dict[str, Any]] = []
@@ -99,7 +111,10 @@ def threshold_sweep_report(
         edge = _f(r.get("edge"))
         conf = _f(r.get("confidence_score"))
         spread = _f(r.get("quote_spread_yes"))
+        hours_to_end = _f(r.get("hours_to_end"))
         if y is None or edge is None or conf is None:
+            continue
+        if hours_to_end is None or hours_to_end < min_hours_to_end:
             continue
         if spread is not None and spread > max_spread:
             continue
@@ -119,6 +134,38 @@ def threshold_sweep_report(
                 r for r in candidates
                 if abs(float(r.get("edge") or 0.0)) >= e_thr and float(r.get("confidence_score") or 0.0) >= c_thr
             ]
+            selected.sort(key=_ts_key)
+            if dedupe_market:
+                seen_market_ids: set[str] = set()
+                deduped: list[dict[str, Any]] = []
+                for r in selected:
+                    market_id = str(r.get("market_id") or "")
+                    if not market_id or market_id in seen_market_ids:
+                        continue
+                    seen_market_ids.add(market_id)
+                    deduped.append(r)
+                selected = deduped
+            if max_positions_per_event >= 0:
+                # Resolution-proxy benchmark should not overtrade mutually exclusive buckets.
+                # Keep the strongest qualifying rows per event (fallback to market_id for unknown event slug).
+                grouped: dict[str, list[dict[str, Any]]] = {}
+                for r in selected:
+                    event_key = str(r.get("event_slug") or "") or f"market:{str(r.get('market_id') or '')}"
+                    grouped.setdefault(event_key, []).append(r)
+                capped: list[dict[str, Any]] = []
+                for group in grouped.values():
+                    group_sorted = sorted(
+                        group,
+                        key=lambda r: (
+                            abs(float(r.get("edge") or 0.0)),
+                            float(r.get("confidence_score") or 0.0),
+                            -_ts_key(r)[0],
+                            _ts_key(r)[1],
+                        ),
+                        reverse=True,
+                    )
+                    capped.extend(group_sorted[:max(0, max_positions_per_event)])
+                selected = sorted(capped, key=_ts_key)
             if not selected:
                 continue
             pnls = [float(r["_proxy"]["pnl_usd"]) for r in selected]
@@ -142,6 +189,8 @@ def threshold_sweep_report(
                     "avg_return_pct": _round(avg_ret),
                     "avg_abs_edge": _round(sum(abs(float(r["edge"])) for r in selected) / len(selected)),
                     "avg_confidence": _round(sum(float(r["confidence_score"]) for r in selected) / len(selected)),
+                    "distinct_market_ids": len({str(r.get("market_id") or "") for r in selected if str(r.get("market_id") or "")}),
+                    "distinct_events": len({(str(r.get("event_slug") or "") or f"market:{str(r.get('market_id') or '')}") for r in selected}),
                 }
             )
 
@@ -165,6 +214,9 @@ def threshold_sweep_report(
             "statuses": sorted(statuses) if statuses else None,
             "grid_size": len(edge_grid) * len(conf_grid),
             "results": len(results),
+            "dedupe_market": dedupe_market,
+            "max_positions_per_event": max_positions_per_event,
+            "min_hours_to_end": min_hours_to_end,
         },
         "top_configs": ranked[:25],
     }
@@ -186,6 +238,9 @@ def main() -> int:
         stake_usd=float(os.getenv("WEATHER_BOT_BT_SIZE_USD", "5")),
         max_spread=float(os.getenv("WEATHER_BOT_BT_MAX_SPREAD", "0.18")),
         statuses=statuses,
+        dedupe_market=os.getenv("WEATHER_BOT_BT_DEDUPE_MARKET", "1").strip().lower() in {"1", "true", "yes"},
+        max_positions_per_event=int(os.getenv("WEATHER_BOT_BT_MAX_POSITIONS_PER_EVENT", "1")),
+        min_hours_to_end=float(os.getenv("WEATHER_BOT_BT_MIN_HOURS_TO_END", "0")),
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0
@@ -193,4 +248,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

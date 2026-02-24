@@ -62,6 +62,9 @@ def _labeled_rows(rows: list[dict[str, Any]], *, restrict_status: str | None = N
             continue
         if _to_float(r.get("model_prob_yes")) is None:
             continue
+        h = _to_float(r.get("hours_to_end"))
+        if h is None or h < 0.0:
+            continue
         ts = _parse_iso(r.get("snapshot_time_utc"))
         if ts is None:
             continue

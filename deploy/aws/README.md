@@ -92,6 +92,12 @@ sudo systemctl list-timers | rg weather-bot-settlement
 This checks every ~15 minutes and runs calibration refresh only when new settled markets overlap your stored scans.
 It also runs the paper settlement reconciler on every check so paper positions can close on settlement or mark-based TP/SL/time-stop triggers.
 
+Calibration/benchmark integrity guards (recommended defaults in `.env.weather-bot`):
+- `WEATHER_BOT_FEATURE_LABEL_MIN_HOURS_TO_END=0` (prevents post-target label leakage in feature export)
+- `WEATHER_BOT_BT_DEDUPE_MARKET=1` (threshold sweep counts one decision per market)
+- `WEATHER_BOT_BT_MAX_POSITIONS_PER_EVENT=1` (prevents overcounting mutually exclusive buckets in one daily event)
+- `WEATHER_BOT_BT_MIN_HOURS_TO_END=0` (threshold sweep ignores post-target rows defensively)
+
 Paper mark-exit tuning (optional in `.env.weather-bot`):
 - `WEATHER_BOT_PAPER_MARK_EXITS_ENABLED` (default `1`)
 - `WEATHER_BOT_PAPER_MARK_MAX_AGE_SECONDS` (default `1800`)
@@ -107,6 +113,9 @@ Paper mark-exit tuning (optional in `.env.weather-bot`):
 - `WEATHER_BOT_PAPER_CORE_TRAILING_ENABLED` (default `1`)
 - `WEATHER_BOT_PAPER_CORE_TRAILING_DRAWDOWN_PCT` (default `0.15`)
 - `WEATHER_BOT_PAPER_CORE_TRAILING_MIN_PEAK_RETURN_PCT` (default `0.25`)
+- `WEATHER_BOT_PAPER_MIN_HOLD_MINUTES_BEFORE_SL` (default `20`)
+- `WEATHER_BOT_PAPER_MAX_SPREAD_FOR_SL` (default `0.12`)
+- `WEATHER_BOT_PAPER_MAX_SPREAD_FOR_TP` (default `0.18`)
 - `WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_PATH` (JSON file for city/horizon overrides)
 - `WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_JSON` (inline JSON overrides; useful for quick experiments)
 
@@ -173,7 +182,7 @@ Notes:
 - `data/sample/paper_settlement_report.json`
 - `data/sample/paper_performance_report.json`
 
-`paper_performance_report.json` now includes breakdowns by `exit_reason`, `city`, `direction`, `entry_horizon`, `exit_regime`, and `partial-vs-full` exits. With partial TP enabled, the remaining tranche can be protected by break-even/trailing-stop logic before settlement.
+`paper_performance_report.json` now includes breakdowns by `exit_reason`, `city`, `direction`, `entry_horizon`, `exit_regime`, and `partial-vs-full` exits. With partial TP enabled, the remaining tranche can be protected by break-even/trailing-stop logic before settlement, and mark exits can be filtered by hold-time/spread quality guards.
 
 ## Execution Modes (Guarded)
 

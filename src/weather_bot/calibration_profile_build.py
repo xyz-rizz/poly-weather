@@ -86,11 +86,14 @@ def _filter_labeled_rows(rows: list[dict[str, Any]], *, restrict_status: str | N
     for r in rows:
         y = _to_int(r.get("label_yes"))
         p = _to_float(r.get("model_prob_yes"))
+        h = _to_float(r.get("hours_to_end"))
         if y is None or p is None:
             continue
         if restrict_status and str(r.get("status") or "") != restrict_status:
             continue
         if not (0.0 <= p <= 1.0):
+            continue
+        if h is None or h < 0.0:
             continue
         labeled_rows.append(r)
     return labeled_rows
