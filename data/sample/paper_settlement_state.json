@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-24T17:16:09.031640+00:00",
+  "as_of_utc": "2026-02-24T17:46:12.332003+00:00",
   "closed_market_ids": [
     "1407218",
     "1407238",
@@ -11,6 +11,7 @@
     "1413715",
     "1413721",
     "1427446",
+    "1427458",
     "1427461"
   ],
   "open_positions": [
@@ -63,10 +64,10 @@
       "event_slug": "highest-temperature-in-nyc-on-february-25-2026",
       "market_id": "1427447",
       "original_size_usd": 5.0,
-      "partial_tp_taken": false,
-      "peak_mark_return_pct": 0.35937499999999994,
+      "partial_tp_taken": true,
+      "peak_mark_return_pct": 0.4765624999999999,
       "signal_time_utc": "2026-02-24T16:05:41.159185+00:00",
-      "size_usd": 5.0,
+      "size_usd": 2.5,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-25T12:00:00+00:00"
     },
@@ -97,22 +98,8 @@
       "size_usd": 5.0,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-25T12:00:00+00:00"
-    },
-    {
-      "city": "Dallas",
-      "direction": "BUY_NO",
-      "entry_price": 0.6699999999999999,
-      "event_slug": "highest-temperature-in-dallas-on-february-25-2026",
-      "market_id": "1427458",
-      "original_size_usd": 5.0,
-      "partial_tp_taken": false,
-      "peak_mark_return_pct": -0.11940298507462682,
-      "signal_time_utc": "2026-02-24T17:05:46.109097+00:00",
-      "size_usd": 5.0,
-      "source_event_type": "signal",
-      "target_time_utc": "2026-02-25T12:00:00+00:00"
     }
   ],
-  "realized_pnl_usd": -8.238242313324943,
+  "realized_pnl_usd": -8.228330932727927,
   "settled_trades": 3
 }
