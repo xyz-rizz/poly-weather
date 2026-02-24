@@ -102,6 +102,11 @@ Paper mark-exit tuning (optional in `.env.weather-bot`):
 - `WEATHER_BOT_PAPER_PARTIAL_TP_FRACTION` (default `0.5`)
 - `WEATHER_BOT_PAPER_PARTIAL_TP_MIN_CLOSE_USD` (default `1.0`)
 - `WEATHER_BOT_PAPER_PARTIAL_TP_MIN_REMAINING_USD` (default `1.0`)
+- `WEATHER_BOT_PAPER_CORE_BREAK_EVEN_ENABLED` (default `1`)
+- `WEATHER_BOT_PAPER_CORE_BREAK_EVEN_BUFFER_PCT` (default `0.02`)
+- `WEATHER_BOT_PAPER_CORE_TRAILING_ENABLED` (default `1`)
+- `WEATHER_BOT_PAPER_CORE_TRAILING_DRAWDOWN_PCT` (default `0.15`)
+- `WEATHER_BOT_PAPER_CORE_TRAILING_MIN_PEAK_RETURN_PCT` (default `0.25`)
 - `WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_PATH` (JSON file for city/horizon overrides)
 - `WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_JSON` (inline JSON overrides; useful for quick experiments)
 
@@ -168,7 +173,7 @@ Notes:
 - `data/sample/paper_settlement_report.json`
 - `data/sample/paper_performance_report.json`
 
-`paper_performance_report.json` now includes breakdowns by `exit_reason`, `city`, `direction`, `entry_horizon`, `exit_regime`, and `partial-vs-full` exits, plus simple tuning-candidate suggestions based on realized paper trades.
+`paper_performance_report.json` now includes breakdowns by `exit_reason`, `city`, `direction`, `entry_horizon`, `exit_regime`, and `partial-vs-full` exits. With partial TP enabled, the remaining tranche can be protected by break-even/trailing-stop logic before settlement.
 
 ## Execution Modes (Guarded)
 

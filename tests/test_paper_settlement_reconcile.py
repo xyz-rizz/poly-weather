@@ -39,6 +39,11 @@ def test_mark_exit_take_profit_buy_yes():
             now_utc=now,
             profile={"all": {"all": {"take_profit_pct": 0.35, "stop_loss_pct": 0.20, "time_stop_grace_seconds": 300, "mark_fresh_seconds": 1800}}},
         ),
+        core_break_even_enabled=True,
+        core_break_even_buffer_pct=0.02,
+        core_trailing_enabled=True,
+        core_trailing_drawdown_pct=0.15,
+        core_trailing_min_peak_return_pct=0.25,
     )
     assert decision is not None
     exit_price, reason, ret_mark, _ = decision
@@ -75,6 +80,11 @@ def test_mark_exit_time_stop_after_target_grace():
             now_utc=now,
             profile={"all": {"all": {"take_profit_pct": 0.50, "stop_loss_pct": 0.50, "time_stop_grace_seconds": 300, "mark_fresh_seconds": 1800}}},
         ),
+        core_break_even_enabled=True,
+        core_break_even_buffer_pct=0.02,
+        core_trailing_enabled=True,
+        core_trailing_drawdown_pct=0.15,
+        core_trailing_min_peak_return_pct=0.25,
     )
     assert decision is not None
     exit_price, reason, _, _ = decision
@@ -126,3 +136,86 @@ def test_select_exit_regime_city_and_horizon_override(tmp_path, monkeypatch):
     assert regime.take_profit_pct == 0.18
     assert regime.stop_loss_pct == 0.12
     assert regime.mark_fresh_seconds == 600.0
+
+
+def test_mark_exit_break_even_after_partial_tp():
+    now = datetime.now(UTC)
+    pos = PaperSignalPosition(
+        market_id="m3",
+        event_slug="e3",
+        city="NYC",
+        direction="BUY_YES",
+        size_usd=2.5,
+        original_size_usd=5.0,
+        entry_price=0.20,
+        signal_time_utc=now - timedelta(hours=3),
+        target_time_utc=now + timedelta(hours=6),
+        partial_tp_taken=True,
+        peak_mark_return_pct=0.40,
+    )
+    row = {
+        "implied_yes_mid": 0.203,  # +1.5% return on position price
+        "yes_bid": 0.202,
+        "yes_ask": 0.204,
+        "quote_time_utc": now.isoformat(),
+    }
+    decision = _mark_exit_price_and_reason(
+        pos,
+        row,
+        now_utc=now,
+        regime=_select_exit_regime(
+            pos,
+            now_utc=now,
+            profile={"all": {"all": {"take_profit_pct": 0.50, "stop_loss_pct": 0.50, "time_stop_grace_seconds": 300, "mark_fresh_seconds": 1800}}},
+        ),
+        core_break_even_enabled=True,
+        core_break_even_buffer_pct=0.02,
+        core_trailing_enabled=False,
+        core_trailing_drawdown_pct=0.15,
+        core_trailing_min_peak_return_pct=0.25,
+    )
+    assert decision is not None
+    _, reason, _, _ = decision
+    assert reason == "break_even_stop"
+
+
+def test_mark_exit_trailing_after_partial_tp():
+    now = datetime.now(UTC)
+    pos = PaperSignalPosition(
+        market_id="m4",
+        event_slug="e4",
+        city="Dallas",
+        direction="BUY_NO",
+        size_usd=2.5,
+        original_size_usd=5.0,
+        entry_price=0.40,
+        signal_time_utc=now - timedelta(hours=2),
+        target_time_utc=now + timedelta(hours=4),
+        partial_tp_taken=True,
+        peak_mark_return_pct=0.55,
+    )
+    # BUY_NO mark position price = 1 - yes_mid = 0.50 => return = +25%
+    row = {
+        "implied_yes_mid": 0.50,
+        "no_bid": 0.49,
+        "no_ask": 0.51,
+        "quote_time_utc": now.isoformat(),
+    }
+    decision = _mark_exit_price_and_reason(
+        pos,
+        row,
+        now_utc=now,
+        regime=_select_exit_regime(
+            pos,
+            now_utc=now,
+            profile={"all": {"all": {"take_profit_pct": 0.80, "stop_loss_pct": 0.80, "time_stop_grace_seconds": 300, "mark_fresh_seconds": 1800}}},
+        ),
+        core_break_even_enabled=True,
+        core_break_even_buffer_pct=0.02,
+        core_trailing_enabled=True,
+        core_trailing_drawdown_pct=0.15,
+        core_trailing_min_peak_return_pct=0.25,
+    )
+    assert decision is not None
+    _, reason, _, _ = decision
+    assert reason == "trailing_stop"

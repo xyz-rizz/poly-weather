@@ -60,6 +60,7 @@ class PaperSignalPosition:
     signal_time_utc: datetime
     target_time_utc: datetime | None = None
     partial_tp_taken: bool = False
+    peak_mark_return_pct: float | None = None
     source_event_type: str = "signal"
 
 
@@ -108,6 +109,7 @@ def load_state(path: Path) -> PaperSettlementState:
                     signal_time_utc=dt,
                     target_time_utc=_parse_dt(row.get("target_time_utc")),
                     partial_tp_taken=bool(row.get("partial_tp_taken", False)),
+                    peak_mark_return_pct=_as_float(row.get("peak_mark_return_pct")),
                     source_event_type=str(row.get("source_event_type") or "signal"),
                 )
             )
@@ -360,6 +362,11 @@ def _mark_exit_price_and_reason(
     *,
     now_utc: datetime,
     regime: ExitRegime,
+    core_break_even_enabled: bool,
+    core_break_even_buffer_pct: float,
+    core_trailing_enabled: bool,
+    core_trailing_drawdown_pct: float,
+    core_trailing_min_peak_return_pct: float,
 ) -> tuple[float, str, float, float] | None:
     quote_ts = _parse_dt(mark_row.get("quote_time_utc")) or _parse_dt(mark_row.get("snapshot_time_utc"))
     if quote_ts is None:
@@ -392,10 +399,20 @@ def _mark_exit_price_and_reason(
     ret = (mark_pos - pos.entry_price) / max(pos.entry_price, 1e-9)
     shares = pos.size_usd / max(pos.entry_price, 1e-9)
     unrealized_pnl = shares * (mark_pos - pos.entry_price)
+    prev_peak = pos.peak_mark_return_pct
+    if prev_peak is None or ret > prev_peak:
+        pos.peak_mark_return_pct = ret
 
     reason = None
     if ret >= regime.take_profit_pct:
         reason = "take_profit"
+    elif pos.partial_tp_taken and core_trailing_enabled:
+        peak = pos.peak_mark_return_pct if pos.peak_mark_return_pct is not None else ret
+        if peak >= core_trailing_min_peak_return_pct and ret <= (peak - abs(core_trailing_drawdown_pct)):
+            reason = "trailing_stop"
+    elif pos.partial_tp_taken and core_break_even_enabled:
+        if ret <= core_break_even_buffer_pct:
+            reason = "break_even_stop"
     elif ret <= -abs(regime.stop_loss_pct):
         reason = "stop_loss"
     else:
@@ -436,6 +453,11 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
     partial_tp_fraction = _bounded_fraction(float(os.getenv("WEATHER_BOT_PAPER_PARTIAL_TP_FRACTION", "0.5")))
     partial_tp_min_close_usd = float(os.getenv("WEATHER_BOT_PAPER_PARTIAL_TP_MIN_CLOSE_USD", "1.0"))
     partial_tp_min_remaining_usd = float(os.getenv("WEATHER_BOT_PAPER_PARTIAL_TP_MIN_REMAINING_USD", "1.0"))
+    core_break_even_enabled = os.getenv("WEATHER_BOT_PAPER_CORE_BREAK_EVEN_ENABLED", "1").strip().lower() in {"1", "true", "yes"}
+    core_break_even_buffer_pct = float(os.getenv("WEATHER_BOT_PAPER_CORE_BREAK_EVEN_BUFFER_PCT", "0.02"))
+    core_trailing_enabled = os.getenv("WEATHER_BOT_PAPER_CORE_TRAILING_ENABLED", "1").strip().lower() in {"1", "true", "yes"}
+    core_trailing_drawdown_pct = float(os.getenv("WEATHER_BOT_PAPER_CORE_TRAILING_DRAWDOWN_PCT", "0.15"))
+    core_trailing_min_peak_return_pct = float(os.getenv("WEATHER_BOT_PAPER_CORE_TRAILING_MIN_PEAK_RETURN_PCT", "0.25"))
     exit_regime_profile = _load_exit_regime_profile(
         base_dir=base_dir,
         default_take_profit_pct=take_profit_pct,
@@ -489,6 +511,7 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
             signal_time_utc=signal_time,
             target_time_utc=_parse_dt(market.get("target_time_utc")),
             partial_tp_taken=False,
+            peak_mark_return_pct=None,
             source_event_type="signal",
         )
         open_by_market[market_id] = pos
@@ -573,6 +596,11 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
                 row,
                 now_utc=now_utc,
                 regime=regime,
+                core_break_even_enabled=core_break_even_enabled,
+                core_break_even_buffer_pct=core_break_even_buffer_pct,
+                core_trailing_enabled=core_trailing_enabled,
+                core_trailing_drawdown_pct=core_trailing_drawdown_pct,
+                core_trailing_min_peak_return_pct=core_trailing_min_peak_return_pct,
             )
             if decision is None:
                 continue
@@ -616,6 +644,7 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
                     "remaining_size_usd": None if not partial_exit else round(pos.size_usd, 6),
                     "partial_exit": partial_exit,
                     "partial_tp_taken_after": pos.partial_tp_taken,
+                    "peak_mark_return_pct_after": None if pos.peak_mark_return_pct is None else round(pos.peak_mark_return_pct, 6),
                     "position_original_size_usd": pos.original_size_usd,
                     "entry_price": round(pos.entry_price, 6),
                     "exit_price": round(exit_price, 6),
@@ -684,6 +713,11 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
         "partial_tp_fraction": partial_tp_fraction,
         "partial_tp_min_close_usd": partial_tp_min_close_usd,
         "partial_tp_min_remaining_usd": partial_tp_min_remaining_usd,
+        "core_break_even_enabled": core_break_even_enabled,
+        "core_break_even_buffer_pct": core_break_even_buffer_pct,
+        "core_trailing_enabled": core_trailing_enabled,
+        "core_trailing_drawdown_pct": core_trailing_drawdown_pct,
+        "core_trailing_min_peak_return_pct": core_trailing_min_peak_return_pct,
         "exit_regime_profile_enabled": bool(os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_PATH", "").strip() or os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_JSON", "").strip()),
     }
     report_path = Path(os.getenv("WEATHER_BOT_PAPER_SETTLEMENT_REPORT", str(base_dir / "paper_settlement_report.json")))
