@@ -1,12 +1,12 @@
 {
   "distinct_markets": 57,
   "last_action": "skip",
-  "last_checked_utc": "2026-02-24T05:08:33.421024+00:00",
+  "last_checked_utc": "2026-02-24T05:39:26.135264+00:00",
   "last_reason": "no new matched settled markets",
   "matched_market_ids": 11,
   "resolved_market_ids_available": 485,
   "rows_with_outcome": 902,
-  "snapshot_time_max": "2026-02-24T05:08:01.438026+00:00",
+  "snapshot_time_max": "2026-02-24T05:38:03.235843+00:00",
   "snapshot_time_min": "2026-02-23T12:14:23.508144+00:00",
   "target_time_max": "2026-02-24T12:00:00+00:00",
   "target_time_min": "2026-02-23T12:00:00+00:00"
