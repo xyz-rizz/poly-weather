@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-24T16:16:04.217078+00:00",
+  "as_of_utc": "2026-02-24T16:46:11.090616+00:00",
   "closed_market_ids": [
     "1407218",
     "1407238",
@@ -62,13 +62,55 @@
       "market_id": "1427447",
       "original_size_usd": 5.0,
       "partial_tp_taken": false,
-      "peak_mark_return_pct": -0.10937499999999992,
+      "peak_mark_return_pct": 0.34374999999999994,
       "signal_time_utc": "2026-02-24T16:05:41.159185+00:00",
+      "size_usd": 5.0,
+      "source_event_type": "signal",
+      "target_time_utc": "2026-02-25T12:00:00+00:00"
+    },
+    {
+      "city": "Dallas",
+      "direction": "BUY_NO",
+      "entry_price": 0.51,
+      "event_slug": "highest-temperature-in-dallas-on-february-25-2026",
+      "market_id": "1427461",
+      "original_size_usd": 5.0,
+      "partial_tp_taken": true,
+      "peak_mark_return_pct": 0.8823529411764705,
+      "signal_time_utc": "2026-02-24T16:25:42.307022+00:00",
+      "size_usd": 2.5,
+      "source_event_type": "signal",
+      "target_time_utc": "2026-02-25T12:00:00+00:00"
+    },
+    {
+      "city": "NYC",
+      "direction": "BUY_YES",
+      "entry_price": 0.12,
+      "event_slug": "highest-temperature-in-nyc-on-february-25-2026",
+      "market_id": "1427446",
+      "original_size_usd": 5.0,
+      "partial_tp_taken": false,
+      "peak_mark_return_pct": -0.4166666666666667,
+      "signal_time_utc": "2026-02-24T16:40:43.890835+00:00",
+      "size_usd": 5.0,
+      "source_event_type": "signal",
+      "target_time_utc": "2026-02-25T12:00:00+00:00"
+    },
+    {
+      "city": "NYC",
+      "direction": "BUY_NO",
+      "entry_price": 0.6799999999999999,
+      "event_slug": "highest-temperature-in-nyc-on-february-25-2026",
+      "market_id": "1427450",
+      "original_size_usd": 5.0,
+      "partial_tp_taken": false,
+      "peak_mark_return_pct": -0.22058823529411753,
+      "signal_time_utc": "2026-02-24T16:45:44.009914+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-25T12:00:00+00:00"
     }
   ],
-  "realized_pnl_usd": -8.43432074469749,
+  "realized_pnl_usd": -6.277457999599452,
   "settled_trades": 3
 }
