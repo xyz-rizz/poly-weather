@@ -159,6 +159,7 @@ Notes:
 - `data/sample/paper_settlement_state.json`
 - `data/sample/paper_settlement_ledger.jsonl`
 - `data/sample/paper_settlement_report.json`
+- `data/sample/paper_performance_report.json`
 
 ## Security Notes (Important)
 

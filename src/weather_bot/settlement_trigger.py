@@ -8,6 +8,7 @@ from typing import Any
 
 from weather_bot.calibration_refresh import run_calibration_refresh
 from weather_bot.feature_export import export_feature_rows
+from weather_bot.paper_performance_report import run_paper_performance_report
 from weather_bot.paper_settlement_reconcile import run_paper_settlement_reconcile
 
 
@@ -61,6 +62,7 @@ def run_settlement_trigger() -> dict[str, Any]:
     should_trigger = force or (new_matched >= min_new_matches)
     refresh_result: dict[str, Any] | None = None
     paper_settlement_result: dict[str, Any] | None = None
+    paper_performance_result: dict[str, Any] | None = None
     action = "skip"
     reason = "no new matched settled markets"
     if should_trigger:
@@ -68,6 +70,7 @@ def run_settlement_trigger() -> dict[str, Any]:
         reason = "forced" if force else f"new matched settled markets: +{new_matched}"
         refresh_result = run_calibration_refresh()
     paper_settlement_result = run_paper_settlement_reconcile()
+    paper_performance_result = run_paper_performance_report()
 
     next_state = {
         "last_checked_utc": _iso_now(),
@@ -96,10 +99,20 @@ def run_settlement_trigger() -> dict[str, Any]:
                 "closed_this_run",
                 "settled_this_run",
                 "mark_exits_this_run",
+                "metadata_backfills_this_run",
                 "realized_pnl_delta_usd",
                 "realized_pnl_total_usd",
                 "settled_trades_total",
             )
+        }
+    if paper_performance_result is not None:
+        next_state["last_paper_performance_utc"] = _iso_now()
+        next_state["last_paper_performance_summary"] = {
+            "closed_trades": (((paper_performance_result.get("closed_summary") or {}).get("trades"))),
+            "closed_total_pnl_usd": (((paper_performance_result.get("closed_summary") or {}).get("total_pnl_usd"))),
+            "open_positions": (((paper_performance_result.get("open_summary") or {}).get("open_positions"))),
+            "open_unrealized_pnl_usd": (((paper_performance_result.get("open_summary") or {}).get("unrealized_pnl_usd"))),
+            "total_pnl_including_open_usd": (((paper_performance_result.get("open_summary") or {}).get("total_pnl_including_open_usd"))),
         }
     _write_json(state_path, next_state)
 
@@ -124,6 +137,7 @@ def run_settlement_trigger() -> dict[str, Any]:
         },
         "refresh_result": refresh_result,
         "paper_settlement_result": paper_settlement_result,
+        "paper_performance_result": paper_performance_result,
         "state_path": str(state_path),
     }
 

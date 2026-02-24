@@ -354,6 +354,7 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
 
     settled_now = 0
     mark_exits_now = 0
+    metadata_backfills = 0
     ledger_rows: list[dict[str, Any]] = []
     realized_delta = 0.0
     now_utc = datetime.now(UTC)
@@ -400,6 +401,20 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
             row = mark_rows.get(market_id)
             if not isinstance(row, dict):
                 continue
+            changed = False
+            if not pos.event_slug and row.get("event_slug"):
+                pos.event_slug = str(row.get("event_slug") or "")
+                changed = True
+            if not pos.city and row.get("city"):
+                pos.city = str(row.get("city") or "")
+                changed = True
+            if pos.target_time_utc is None:
+                tgt = _parse_dt(row.get("target_time_utc"))
+                if tgt is not None:
+                    pos.target_time_utc = tgt
+                    changed = True
+            if changed:
+                metadata_backfills += 1
             decision = _mark_exit_price_and_reason(
                 pos,
                 row,
@@ -479,6 +494,7 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
         "settled_trades_total": next_state.settled_trades,
         "resolved_market_ids_available": len(outcome_by_market),
         "mark_exits_enabled": mark_exits_enabled,
+        "metadata_backfills_this_run": metadata_backfills,
         "mark_max_age_seconds": mark_fresh_seconds,
         "take_profit_pct": take_profit_pct,
         "stop_loss_pct": stop_loss_pct,
