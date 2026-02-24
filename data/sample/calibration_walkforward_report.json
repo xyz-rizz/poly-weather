@@ -1,9 +1,18 @@
 {
+  "aggregate": {
+    "calibrated": {},
+    "delta": {},
+    "raw": {}
+  },
   "folds": [],
   "summary": {
     "folds_requested": 4,
     "folds_run": 0,
-    "rows_labeled": 0,
-    "rows_total": 780
+    "min_bin_samples": 8,
+    "min_train_rows": 100,
+    "restrict_status": null,
+    "rows_labeled": 109,
+    "rows_total": 5937,
+    "shrinkage_n": 25
   }
 }
