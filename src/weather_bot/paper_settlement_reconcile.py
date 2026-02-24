@@ -70,6 +70,17 @@ class PaperSettlementState:
     settled_trades: int = 0
 
 
+@dataclass(frozen=True)
+class ExitRegime:
+    key: str
+    city_key: str
+    horizon_key: str
+    take_profit_pct: float
+    stop_loss_pct: float
+    time_stop_grace_seconds: float
+    mark_fresh_seconds: float
+
+
 def load_state(path: Path) -> PaperSettlementState:
     if not path.exists():
         return PaperSettlementState(as_of_utc=datetime.now(UTC))
@@ -161,6 +172,128 @@ def _as_float(value: Any) -> float | None:
         return None
 
 
+def _horizon_bucket_from_hours(hours: float | None) -> str:
+    if hours is None:
+        return "unknown"
+    if hours < 0:
+        return "expired"
+    if hours <= 2:
+        return "0-2h"
+    if hours <= 6:
+        return "2-6h"
+    if hours <= 12:
+        return "6-12h"
+    if hours <= 24:
+        return "12-24h"
+    return "24h+"
+
+
+def _hours_to_target(now_utc: datetime, target_time_utc: datetime | None) -> float | None:
+    if target_time_utc is None:
+        return None
+    try:
+        return (target_time_utc - now_utc).total_seconds() / 3600.0
+    except Exception:
+        return None
+
+
+def _load_exit_regime_profile(
+    *,
+    base_dir: Path,
+    default_take_profit_pct: float,
+    default_stop_loss_pct: float,
+    default_time_stop_grace_seconds: float,
+    default_mark_fresh_seconds: float,
+) -> dict[str, dict[str, dict[str, float]]]:
+    profile_path_txt = os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_PATH", "").strip()
+    profile_json_txt = os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_JSON", "").strip()
+    raw: dict[str, Any] | None = None
+    if profile_path_txt:
+        profile_path = Path(profile_path_txt)
+        if not profile_path.is_absolute():
+            profile_path = base_dir / profile_path
+        try:
+            loaded = json.loads(profile_path.read_text(encoding="utf-8"))
+            if isinstance(loaded, dict):
+                raw = loaded
+        except Exception:
+            raw = None
+    elif profile_json_txt:
+        try:
+            loaded = json.loads(profile_json_txt)
+            if isinstance(loaded, dict):
+                raw = loaded
+        except Exception:
+            raw = None
+
+    defaults = {
+        "take_profit_pct": default_take_profit_pct,
+        "stop_loss_pct": default_stop_loss_pct,
+        "time_stop_grace_seconds": default_time_stop_grace_seconds,
+        "mark_fresh_seconds": default_mark_fresh_seconds,
+    }
+    out: dict[str, dict[str, dict[str, float]]] = {"all": {"all": dict(defaults)}}
+    if not raw:
+        return out
+    cities = raw.get("cities") if isinstance(raw.get("cities"), dict) else {}
+    global_cfg = raw.get("global") if isinstance(raw.get("global"), dict) else {}
+    if global_cfg:
+        out["all"]["all"] = _normalize_regime_values(global_cfg, defaults)
+        horizons = global_cfg.get("horizons") if isinstance(global_cfg.get("horizons"), dict) else {}
+        for hk, hv in horizons.items():
+            if isinstance(hv, dict):
+                out["all"][str(hk)] = _normalize_regime_values(hv, out["all"]["all"])
+    for city_key, cfg in cities.items():
+        if not isinstance(cfg, dict):
+            continue
+        city_norm = str(city_key).strip() or "all"
+        city_base = _normalize_regime_values(cfg, out["all"]["all"])
+        out[city_norm] = {"all": city_base}
+        horizons = cfg.get("horizons") if isinstance(cfg.get("horizons"), dict) else {}
+        for hk, hv in horizons.items():
+            if isinstance(hv, dict):
+                out[city_norm][str(hk)] = _normalize_regime_values(hv, city_base)
+    return out
+
+
+def _normalize_regime_values(values: dict[str, Any], base: dict[str, float]) -> dict[str, float]:
+    out = dict(base)
+    for key in ("take_profit_pct", "stop_loss_pct", "time_stop_grace_seconds", "mark_fresh_seconds"):
+        v = _as_float(values.get(key))
+        if v is None:
+            continue
+        if key in {"take_profit_pct", "stop_loss_pct"}:
+            v = max(0.0, min(5.0, v))
+        elif key == "time_stop_grace_seconds":
+            v = max(0.0, min(86400.0, v))
+        elif key == "mark_fresh_seconds":
+            v = max(1.0, min(86400.0, v))
+        out[key] = float(v)
+    return out
+
+
+def _select_exit_regime(
+    pos: PaperSignalPosition,
+    *,
+    now_utc: datetime,
+    profile: dict[str, dict[str, dict[str, float]]],
+) -> ExitRegime:
+    city_key = (pos.city or "").strip() or "all"
+    hours = _hours_to_target(now_utc, pos.target_time_utc)
+    horizon_key = _horizon_bucket_from_hours(hours)
+    city_cfg = profile.get(city_key) or profile.get("all") or {"all": {}}
+    vals = city_cfg.get(horizon_key) or city_cfg.get("all") or (profile.get("all") or {}).get(horizon_key) or (profile.get("all") or {}).get("all") or {}
+    return ExitRegime(
+        key=f"city={city_key}|h={horizon_key}",
+        city_key=city_key,
+        horizon_key=horizon_key,
+        take_profit_pct=float(vals.get("take_profit_pct", 0.35)),
+        stop_loss_pct=float(vals.get("stop_loss_pct", 0.20)),
+        time_stop_grace_seconds=float(vals.get("time_stop_grace_seconds", 300.0)),
+        mark_fresh_seconds=float(vals.get("mark_fresh_seconds", 1800.0)),
+    )
+
+
 def _latest_mark_rows_from_feature_export(path: Path) -> dict[str, dict[str, Any]]:
     rows = _read_jsonl(path)
     latest: dict[str, dict[str, Any]] = {}
@@ -222,16 +355,13 @@ def _mark_exit_price_and_reason(
     mark_row: dict[str, Any],
     *,
     now_utc: datetime,
-    mark_fresh_seconds: float,
-    take_profit_pct: float,
-    stop_loss_pct: float,
-    time_stop_grace_seconds: float,
+    regime: ExitRegime,
 ) -> tuple[float, str, float, float] | None:
     quote_ts = _parse_dt(mark_row.get("quote_time_utc")) or _parse_dt(mark_row.get("snapshot_time_utc"))
     if quote_ts is None:
         return None
     age_sec = max(0.0, (now_utc - quote_ts).total_seconds())
-    if age_sec > mark_fresh_seconds:
+    if age_sec > regime.mark_fresh_seconds:
         return None
 
     implied_mid = _as_float(mark_row.get("implied_yes_mid"))
@@ -260,13 +390,13 @@ def _mark_exit_price_and_reason(
     unrealized_pnl = shares * (mark_pos - pos.entry_price)
 
     reason = None
-    if ret >= take_profit_pct:
+    if ret >= regime.take_profit_pct:
         reason = "take_profit"
-    elif ret <= -abs(stop_loss_pct):
+    elif ret <= -abs(regime.stop_loss_pct):
         reason = "stop_loss"
     else:
         target_time = pos.target_time_utc or _parse_dt(mark_row.get("target_time_utc"))
-        if target_time is not None and now_utc >= (target_time + timedelta(seconds=max(0.0, time_stop_grace_seconds))):
+        if target_time is not None and now_utc >= (target_time + timedelta(seconds=max(0.0, regime.time_stop_grace_seconds))):
             reason = "time_stop"
     if reason is None:
         return None
@@ -294,6 +424,13 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
     take_profit_pct = float(os.getenv("WEATHER_BOT_PAPER_TAKE_PROFIT_PCT", "0.35"))
     stop_loss_pct = float(os.getenv("WEATHER_BOT_PAPER_STOP_LOSS_PCT", "0.20"))
     time_stop_grace_seconds = float(os.getenv("WEATHER_BOT_PAPER_TIME_STOP_GRACE_SECONDS", "300"))
+    exit_regime_profile = _load_exit_regime_profile(
+        base_dir=base_dir,
+        default_take_profit_pct=take_profit_pct,
+        default_stop_loss_pct=stop_loss_pct,
+        default_time_stop_grace_seconds=time_stop_grace_seconds,
+        default_mark_fresh_seconds=mark_fresh_seconds,
+    )
 
     state = load_state(state_path)
     closed_ids = set(state.closed_market_ids)
@@ -415,14 +552,12 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
                     changed = True
             if changed:
                 metadata_backfills += 1
+            regime = _select_exit_regime(pos, now_utc=now_utc, profile=exit_regime_profile)
             decision = _mark_exit_price_and_reason(
                 pos,
                 row,
                 now_utc=now_utc,
-                mark_fresh_seconds=mark_fresh_seconds,
-                take_profit_pct=take_profit_pct,
-                stop_loss_pct=stop_loss_pct,
-                time_stop_grace_seconds=time_stop_grace_seconds,
+                regime=regime,
             )
             if decision is None:
                 continue
@@ -456,6 +591,13 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
                     "mark_reason": exit_reason,
                     "mark_return_at_mid_pct": round(ret_mark, 6),
                     "mark_source": "feature_rows_export_or_scan_snapshot",
+                    "exit_regime_key": regime.key,
+                    "exit_regime_city": regime.city_key,
+                    "exit_regime_horizon": regime.horizon_key,
+                    "exit_regime_take_profit_pct": regime.take_profit_pct,
+                    "exit_regime_stop_loss_pct": regime.stop_loss_pct,
+                    "exit_regime_time_stop_grace_seconds": regime.time_stop_grace_seconds,
+                    "exit_regime_mark_fresh_seconds": regime.mark_fresh_seconds,
                 }
             )
 
@@ -499,6 +641,7 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
         "take_profit_pct": take_profit_pct,
         "stop_loss_pct": stop_loss_pct,
         "time_stop_grace_seconds": time_stop_grace_seconds,
+        "exit_regime_profile_enabled": bool(os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_PATH", "").strip() or os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_JSON", "").strip()),
     }
     report_path = Path(os.getenv("WEATHER_BOT_PAPER_SETTLEMENT_REPORT", str(base_dir / "paper_settlement_report.json")))
     report_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")

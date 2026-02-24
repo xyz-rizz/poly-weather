@@ -33,6 +33,8 @@ def test_paper_performance_report_groups_closed_and_open(tmp_path):
             "pnl_usd": -0.5,
             "return_pct": -0.1,
             "mark_reason": "stop_loss",
+            "exit_regime_key": "city=Dallas|h=12-24h",
+            "exit_regime_horizon": "12-24h",
             "signal_time_utc": "2026-02-24T06:00:00Z",
             "target_time_utc": "2026-02-24T18:00:00Z",
         },
@@ -77,7 +79,8 @@ def test_paper_performance_report_groups_closed_and_open(tmp_path):
     assert out["closed_summary"]["wins"] == 1
     assert out["closed_counts"]["exit_reasons"]["settlement"] == 1
     assert out["closed_counts"]["exit_reasons"]["stop_loss"] == 1
+    assert "by_exit_regime" in out["closed_breakdowns"]
+    assert "tuning_candidates" in out
     assert out["open_summary"]["open_positions"] == 1
     assert out["open_summary"]["marked_open_positions"] == 1
     assert out["open_summary"]["unrealized_pnl_usd"] > 0
-

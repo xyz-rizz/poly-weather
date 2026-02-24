@@ -157,6 +157,9 @@ def build_paper_performance_report(*, base_dir: Path, out_path: Path | None = No
         rr["hours_to_end_at_entry"] = None if hours_to_end_at_entry is None else round(hours_to_end_at_entry, 6)
         rr["entry_horizon_bucket"] = _horizon_bucket(hours_to_end_at_entry)
         rr["hold_hours"] = None if hold_hours is None else round(hold_hours, 6)
+        rr["exit_regime_key"] = str(r.get("exit_regime_key") or "default")
+        rr["exit_regime_horizon"] = str(r.get("exit_regime_horizon") or "unknown")
+        rr["exit_regime_city"] = str(r.get("exit_regime_city") or (r.get("city") or "unknown"))
         closed_rows.append(rr)
 
     overall = _bucket_metrics(closed_rows)
@@ -241,6 +244,8 @@ def build_paper_performance_report(*, base_dir: Path, out_path: Path | None = No
             "by_city": _group_metrics(closed_rows, lambda r: r.get("city")),
             "by_direction": _group_metrics(closed_rows, lambda r: r.get("direction")),
             "by_entry_horizon": _group_metrics(closed_rows, lambda r: r.get("entry_horizon_bucket")),
+            "by_exit_regime": _group_metrics(closed_rows, lambda r: r.get("exit_regime_key")),
+            "by_exit_regime_horizon": _group_metrics(closed_rows, lambda r: r.get("exit_regime_horizon")),
         },
         "closed_counts": {
             "event_types": dict(event_type_counts),
@@ -276,11 +281,55 @@ def build_paper_performance_report(*, base_dir: Path, out_path: Path | None = No
             ),
         },
         "open_positions_sample": open_rows[:25],
+        "tuning_candidates": _suggest_exit_tuning_candidates(closed_rows),
     }
     if out_path is not None:
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     return report
+
+
+def _suggest_exit_tuning_candidates(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    if not rows:
+        return {"by_exit_reason": {}, "by_regime": {}, "notes": ["No closed paper trades yet"]}
+    by_reason = _group_metrics(rows, lambda r: r.get("exit_reason"))
+    by_regime = _group_metrics(rows, lambda r: r.get("exit_regime_key"))
+    suggestions: list[dict[str, Any]] = []
+    for regime_key, metrics in by_regime.items():
+        n = int(metrics.get("trades") or 0)
+        total = _f(metrics.get("total_pnl_usd")) or 0.0
+        win_rate = _f(metrics.get("win_rate"))
+        if n < 3:
+            continue
+        if total < 0 and win_rate is not None and win_rate < 0.4:
+            suggestions.append(
+                {
+                    "type": "review_regime",
+                    "regime": regime_key,
+                    "reason": "negative pnl with low win rate",
+                    "trades": n,
+                    "total_pnl_usd": round(total, 6),
+                    "win_rate": round(win_rate, 6),
+                }
+            )
+    for exit_reason, metrics in by_reason.items():
+        n = int(metrics.get("trades") or 0)
+        total = _f(metrics.get("total_pnl_usd")) or 0.0
+        if n >= 5 and total < 0:
+            suggestions.append(
+                {
+                    "type": "review_exit_rule",
+                    "exit_reason": exit_reason,
+                    "reason": "exit path is net negative",
+                    "trades": n,
+                    "total_pnl_usd": round(total, 6),
+                }
+            )
+    return {
+        "by_exit_reason": by_reason,
+        "by_regime": by_regime,
+        "suggestions": suggestions[:20],
+    }
 
 
 def run_paper_performance_report() -> dict[str, Any]:
