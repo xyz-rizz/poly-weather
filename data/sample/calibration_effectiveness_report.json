@@ -2,18 +2,18 @@
   "by_city": {
     "Atlanta": {
       "calibrated": {
-        "brier": 0.132282,
-        "ece": 0.062325,
+        "brier": 0.132298,
+        "ece": 0.062173,
         "hit_rate": 0.949495,
-        "log_loss": 0.544832,
+        "log_loss": 0.54487,
         "mean_obs": 0.111111,
-        "mean_pred": 0.156082,
+        "mean_pred": 0.156319,
         "n": 99
       },
       "delta": {
-        "brier": -0.04531,
-        "ece": -0.120913,
-        "log_loss": -0.230213
+        "brier": -0.045294,
+        "ece": -0.121065,
+        "log_loss": -0.230175
       },
       "raw": {
         "brier": 0.177592,
@@ -27,48 +27,48 @@
     },
     "Dallas": {
       "calibrated": {
-        "brier": 0.428417,
-        "ece": 0.561173,
-        "hit_rate": 0.5,
-        "log_loss": 2.671904,
-        "mean_obs": 0.0,
-        "mean_pred": 0.561173,
-        "n": 8
+        "brier": 0.117634,
+        "ece": 0.071877,
+        "hit_rate": 0.959184,
+        "log_loss": 0.507643,
+        "mean_obs": 0.102041,
+        "mean_pred": 0.130428,
+        "n": 98
       },
       "delta": {
-        "brier": -0.33148,
-        "ece": -0.306213,
-        "log_loss": -0.810458
+        "brier": -0.0224,
+        "ece": -0.08677,
+        "log_loss": -0.145329
       },
       "raw": {
-        "brier": 0.759897,
-        "ece": 0.867386,
-        "hit_rate": 0.5,
-        "log_loss": 3.482362,
-        "mean_obs": 0.0,
-        "mean_pred": 0.867386,
-        "n": 8
+        "brier": 0.140033,
+        "ece": 0.158647,
+        "hit_rate": 0.959184,
+        "log_loss": 0.652971,
+        "mean_obs": 0.102041,
+        "mean_pred": 0.120994,
+        "n": 98
       }
     },
     "NYC": {
       "calibrated": {
-        "brier": 0.096204,
-        "ece": 0.021826,
-        "hit_rate": 0.922222,
-        "log_loss": 0.333196,
+        "brier": 0.093404,
+        "ece": 0.012486,
+        "hit_rate": 1.0,
+        "log_loss": 0.325419,
         "mean_obs": 0.111111,
-        "mean_pred": 0.115443,
+        "mean_pred": 0.105526,
         "n": 90
       },
       "delta": {
-        "brier": -0.012643,
-        "ece": -0.073417,
-        "log_loss": -0.059545
+        "brier": -0.015442,
+        "ece": -0.082757,
+        "log_loss": -0.067322
       },
       "raw": {
         "brier": 0.108846,
         "ece": 0.095243,
-        "hit_rate": 0.922222,
+        "hit_rate": 1.0,
         "log_loss": 0.39274,
         "mean_obs": 0.111111,
         "mean_pred": 0.100329,
@@ -79,110 +79,110 @@
   "by_horizon": {
     "0-2h": {
       "calibrated": {
-        "brier": 0.127825,
-        "ece": 0.064081,
-        "hit_rate": 0.918782,
-        "log_loss": 0.534524,
-        "mean_obs": 0.106599,
-        "mean_pred": 0.153966,
-        "n": 197
+        "brier": 0.115094,
+        "ece": 0.031299,
+        "hit_rate": 0.968641,
+        "log_loss": 0.463341,
+        "mean_obs": 0.108014,
+        "mean_pred": 0.13155,
+        "n": 287
       },
       "delta": {
-        "brier": -0.042007,
-        "ece": -0.106739,
-        "log_loss": -0.175806
+        "brier": -0.028115,
+        "ece": -0.093176,
+        "log_loss": -0.150134
       },
       "raw": {
-        "brier": 0.169832,
-        "ece": 0.17082,
-        "hit_rate": 0.918782,
-        "log_loss": 0.71033,
-        "mean_obs": 0.106599,
-        "mean_pred": 0.135936,
-        "n": 197
+        "brier": 0.143209,
+        "ece": 0.124475,
+        "hit_rate": 0.968641,
+        "log_loss": 0.613475,
+        "mean_obs": 0.108014,
+        "mean_pred": 0.110445,
+        "n": 287
       }
     }
   },
   "by_status": {
     "opportunity": {
       "calibrated": {
-        "brier": 0.286583,
-        "ece": 0.223692,
-        "hit_rate": 0.84,
-        "log_loss": 1.29036,
-        "mean_obs": 0.3,
-        "mean_pred": 0.180141,
-        "n": 50
+        "brier": 0.312435,
+        "ece": 0.249524,
+        "hit_rate": 0.96875,
+        "log_loss": 1.279944,
+        "mean_obs": 0.34375,
+        "mean_pred": 0.156726,
+        "n": 64
       },
       "delta": {
-        "brier": -0.044606,
-        "ece": -0.09018,
-        "log_loss": -0.543528
+        "brier": -0.04401,
+        "ece": -0.084847,
+        "log_loss": -0.640272
       },
       "raw": {
-        "brier": 0.331189,
-        "ece": 0.313872,
-        "hit_rate": 0.84,
-        "log_loss": 1.833888,
-        "mean_obs": 0.3,
-        "mean_pred": 0.162583,
-        "n": 50
+        "brier": 0.356445,
+        "ece": 0.334371,
+        "hit_rate": 0.96875,
+        "log_loss": 1.920216,
+        "mean_obs": 0.34375,
+        "mean_pred": 0.16197,
+        "n": 64
       }
     },
     "skipped": {
       "calibrated": {
-        "brier": 0.073826,
-        "ece": 0.104247,
-        "hit_rate": 0.945578,
-        "log_loss": 0.277437,
-        "mean_obs": 0.040816,
-        "mean_pred": 0.145063,
-        "n": 147
+        "brier": 0.058458,
+        "ece": 0.083966,
+        "hit_rate": 0.96861,
+        "log_loss": 0.228979,
+        "mean_obs": 0.040359,
+        "mean_pred": 0.124325,
+        "n": 223
       },
       "delta": {
-        "brier": -0.041123,
-        "ece": -0.017916,
-        "log_loss": -0.05073
+        "brier": -0.023554,
+        "ece": 0.003933,
+        "log_loss": -0.009467
       },
       "raw": {
-        "brier": 0.114949,
-        "ece": 0.122163,
-        "hit_rate": 0.945578,
-        "log_loss": 0.328167,
-        "mean_obs": 0.040816,
-        "mean_pred": 0.126873,
-        "n": 147
+        "brier": 0.082011,
+        "ece": 0.080033,
+        "hit_rate": 0.96861,
+        "log_loss": 0.238446,
+        "mean_obs": 0.040359,
+        "mean_pred": 0.095658,
+        "n": 223
       }
     }
   },
   "overall": {
     "calibrated": {
-      "brier": 0.127825,
-      "ece": 0.064081,
-      "hit_rate": 0.918782,
-      "log_loss": 0.534524,
-      "mean_obs": 0.106599,
-      "mean_pred": 0.153966,
-      "n": 197
+      "brier": 0.115094,
+      "ece": 0.031299,
+      "hit_rate": 0.968641,
+      "log_loss": 0.463341,
+      "mean_obs": 0.108014,
+      "mean_pred": 0.13155,
+      "n": 287
     },
     "delta": {
-      "brier": -0.042007,
-      "ece": -0.106739,
-      "log_loss": -0.175806
+      "brier": -0.028115,
+      "ece": -0.093176,
+      "log_loss": -0.150134
     },
     "raw": {
-      "brier": 0.169832,
-      "ece": 0.17082,
-      "hit_rate": 0.918782,
-      "log_loss": 0.71033,
-      "mean_obs": 0.106599,
-      "mean_pred": 0.135936,
-      "n": 197
+      "brier": 0.143209,
+      "ece": 0.124475,
+      "hit_rate": 0.968641,
+      "log_loss": 0.613475,
+      "mean_obs": 0.108014,
+      "mean_pred": 0.110445,
+      "n": 287
     }
   },
   "profile_hit_examples": [
     {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "city": "Atlanta",
       "hours_to_end": -0.780383,
       "label_yes": 1,
@@ -192,7 +192,7 @@
       "status": "opportunity"
     },
     {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "city": "Atlanta",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -202,7 +202,7 @@
       "status": "opportunity"
     },
     {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "city": "Atlanta",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -212,7 +212,7 @@
       "status": "skipped"
     },
     {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "city": "Atlanta",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -222,7 +222,7 @@
       "status": "skipped"
     },
     {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "city": "Atlanta",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -232,7 +232,7 @@
       "status": "skipped"
     },
     {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "city": "Atlanta",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -242,7 +242,7 @@
       "status": "skipped"
     },
     {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "city": "Atlanta",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -252,7 +252,7 @@
       "status": "skipped"
     },
     {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "city": "Atlanta",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -262,7 +262,87 @@
       "status": "skipped"
     },
     {
-      "calibrated_prob": 0.072765,
+      "calibrated_prob": 0.078252,
+      "city": "Dallas",
+      "hours_to_end": -0.780383,
+      "label_yes": 1,
+      "market_id": "1407225",
+      "profile_key": "city=Dallas|h=0-2h|p=0.0-0.1",
+      "raw_prob": 0.0,
+      "status": "opportunity"
+    },
+    {
+      "calibrated_prob": 0.078252,
+      "city": "Dallas",
+      "hours_to_end": -0.780383,
+      "label_yes": 0,
+      "market_id": "1407226",
+      "profile_key": "city=Dallas|h=0-2h|p=0.0-0.1",
+      "raw_prob": 0.0,
+      "status": "skipped"
+    },
+    {
+      "calibrated_prob": 0.078252,
+      "city": "Dallas",
+      "hours_to_end": -0.780383,
+      "label_yes": 0,
+      "market_id": "1407227",
+      "profile_key": "city=Dallas|h=0-2h|p=0.0-0.1",
+      "raw_prob": 0.0,
+      "status": "skipped"
+    },
+    {
+      "calibrated_prob": 0.078252,
+      "city": "Dallas",
+      "hours_to_end": -0.780383,
+      "label_yes": 0,
+      "market_id": "1407229",
+      "profile_key": "city=Dallas|h=0-2h|p=0.0-0.1",
+      "raw_prob": 0.0,
+      "status": "skipped"
+    },
+    {
+      "calibrated_prob": 0.078252,
+      "city": "Dallas",
+      "hours_to_end": -0.780383,
+      "label_yes": 0,
+      "market_id": "1407230",
+      "profile_key": "city=Dallas|h=0-2h|p=0.0-0.1",
+      "raw_prob": 0.0,
+      "status": "skipped"
+    },
+    {
+      "calibrated_prob": 0.078252,
+      "city": "Dallas",
+      "hours_to_end": -0.780383,
+      "label_yes": 0,
+      "market_id": "1407231",
+      "profile_key": "city=Dallas|h=0-2h|p=0.0-0.1",
+      "raw_prob": 0.0,
+      "status": "skipped"
+    },
+    {
+      "calibrated_prob": 0.078252,
+      "city": "Dallas",
+      "hours_to_end": -0.780383,
+      "label_yes": 0,
+      "market_id": "1407228",
+      "profile_key": "city=Dallas|h=0-2h|p=0.0-0.1",
+      "raw_prob": 0.0,
+      "status": "skipped"
+    },
+    {
+      "calibrated_prob": 0.078252,
+      "city": "Dallas",
+      "hours_to_end": -0.780383,
+      "label_yes": 0,
+      "market_id": "1407232",
+      "profile_key": "city=Dallas|h=0-2h|p=0.0-0.1",
+      "raw_prob": 0.0,
+      "status": "skipped"
+    },
+    {
+      "calibrated_prob": 0.07306,
       "city": "NYC",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -272,7 +352,7 @@
       "status": "skipped"
     },
     {
-      "calibrated_prob": 0.072765,
+      "calibrated_prob": 0.07306,
       "city": "NYC",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -282,7 +362,7 @@
       "status": "skipped"
     },
     {
-      "calibrated_prob": 0.072765,
+      "calibrated_prob": 0.07306,
       "city": "NYC",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -292,7 +372,7 @@
       "status": "skipped"
     },
     {
-      "calibrated_prob": 0.072765,
+      "calibrated_prob": 0.07306,
       "city": "NYC",
       "hours_to_end": -0.780383,
       "label_yes": 0,
@@ -300,94 +380,14 @@
       "profile_key": "city=NYC|h=0-2h|p=0.0-0.1",
       "raw_prob": 3.1e-05,
       "status": "skipped"
-    },
-    {
-      "calibrated_prob": 0.072765,
-      "city": "NYC",
-      "hours_to_end": -0.780383,
-      "label_yes": 0,
-      "market_id": "1407215",
-      "profile_key": "city=NYC|h=0-2h|p=0.0-0.1",
-      "raw_prob": 0.00751,
-      "status": "skipped"
-    },
-    {
-      "calibrated_prob": 0.193603,
-      "city": "NYC",
-      "hours_to_end": -0.780383,
-      "label_yes": 0,
-      "market_id": "1407216",
-      "profile_key": "city=NYC|h=0-2h|p=0.1-0.2",
-      "raw_prob": 0.157056,
-      "status": "opportunity"
-    },
-    {
-      "calibrated_prob": 0.072765,
-      "city": "NYC",
-      "hours_to_end": -0.780383,
-      "label_yes": 0,
-      "market_id": "1407218",
-      "profile_key": "city=NYC|h=0-2h|p=0.0-0.1",
-      "raw_prob": 0.046602,
-      "status": "opportunity"
-    },
-    {
-      "calibrated_prob": 0.072765,
-      "city": "NYC",
-      "hours_to_end": -0.780383,
-      "label_yes": 1,
-      "market_id": "1407219",
-      "profile_key": "city=NYC|h=0-2h|p=0.0-0.1",
-      "raw_prob": 0.000687,
-      "status": "opportunity"
-    },
-    {
-      "calibrated_prob": 0.115238,
-      "city": "Atlanta",
-      "hours_to_end": -0.847364,
-      "label_yes": 1,
-      "market_id": "1407238",
-      "profile_key": "city=Atlanta|h=0-2h|p=0.0-0.1",
-      "raw_prob": 0.054347,
-      "status": "opportunity"
-    },
-    {
-      "calibrated_prob": 0.115238,
-      "city": "Atlanta",
-      "hours_to_end": -0.847364,
-      "label_yes": 0,
-      "market_id": "1407239",
-      "profile_key": "city=Atlanta|h=0-2h|p=0.0-0.1",
-      "raw_prob": 0.058726,
-      "status": "opportunity"
-    },
-    {
-      "calibrated_prob": 0.115238,
-      "city": "Atlanta",
-      "hours_to_end": -0.847364,
-      "label_yes": 0,
-      "market_id": "1407240",
-      "profile_key": "city=Atlanta|h=0-2h|p=0.0-0.1",
-      "raw_prob": 0.046586,
-      "status": "skipped"
-    },
-    {
-      "calibrated_prob": 0.115238,
-      "city": "Atlanta",
-      "hours_to_end": -0.847364,
-      "label_yes": 0,
-      "market_id": "1407241",
-      "profile_key": "city=Atlanta|h=0-2h|p=0.0-0.1",
-      "raw_prob": 0.027493,
-      "status": "skipped"
     }
   ],
   "summary": {
-    "profile_bins": 16,
-    "profile_hit_count": 181,
+    "profile_bins": 20,
+    "profile_hit_count": 278,
     "profile_loaded": true,
     "restrict_status": null,
-    "rows_labeled": 197,
-    "rows_total": 7152
+    "rows_labeled": 287,
+    "rows_total": 7503
   }
 }

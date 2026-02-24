@@ -1,109 +1,133 @@
 {
   "bin_adjustments": {
     "city=Atlanta|h=0-2h|p=0.0-0.1": {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "mean_pred": 0.020853,
       "n": 88,
       "obs_rate": 0.125
     },
     "city=Atlanta|h=all|p=0.0-0.1": {
-      "calibrated_prob": 0.115238,
+      "calibrated_prob": 0.115457,
       "mean_pred": 0.020853,
       "n": 88,
       "obs_rate": 0.125
     },
+    "city=Dallas|h=0-2h|p=0.0-0.1": {
+      "calibrated_prob": 0.078252,
+      "mean_pred": 0.022626,
+      "n": 78,
+      "obs_rate": 0.076923
+    },
+    "city=Dallas|h=all|p=0.0-0.1": {
+      "calibrated_prob": 0.078252,
+      "mean_pred": 0.022626,
+      "n": 78,
+      "obs_rate": 0.076923
+    },
     "city=NYC|h=0-2h|p=0.0-0.1": {
-      "calibrated_prob": 0.072765,
+      "calibrated_prob": 0.07306,
       "mean_pred": 0.032906,
       "n": 59,
       "obs_rate": 0.067797
     },
     "city=NYC|h=0-2h|p=0.1-0.2": {
-      "calibrated_prob": 0.193603,
+      "calibrated_prob": 0.194207,
       "mean_pred": 0.142963,
       "n": 16,
       "obs_rate": 0.3125
     },
     "city=NYC|h=0-2h|p=0.3-0.4": {
-      "calibrated_prob": 0.139392,
+      "calibrated_prob": 0.140143,
       "mean_pred": 0.364595,
       "n": 8,
       "obs_rate": 0.0
     },
     "city=NYC|h=all|p=0.0-0.1": {
-      "calibrated_prob": 0.072765,
+      "calibrated_prob": 0.07306,
       "mean_pred": 0.032906,
       "n": 59,
       "obs_rate": 0.067797
     },
     "city=NYC|h=all|p=0.1-0.2": {
-      "calibrated_prob": 0.193603,
+      "calibrated_prob": 0.194207,
       "mean_pred": 0.142963,
       "n": 16,
       "obs_rate": 0.3125
     },
     "city=NYC|h=all|p=0.3-0.4": {
-      "calibrated_prob": 0.139392,
+      "calibrated_prob": 0.140143,
       "mean_pred": 0.364595,
       "n": 8,
       "obs_rate": 0.0
     },
     "city=all|h=0-2h|p=0.0-0.1": {
-      "calibrated_prob": 0.099175,
-      "mean_pred": 0.025691,
-      "n": 147,
-      "obs_rate": 0.102041
+      "calibrated_prob": 0.0923,
+      "mean_pred": 0.024628,
+      "n": 225,
+      "obs_rate": 0.093333
     },
     "city=all|h=0-2h|p=0.1-0.2": {
-      "calibrated_prob": 0.193603,
-      "mean_pred": 0.142963,
-      "n": 16,
-      "obs_rate": 0.3125
+      "calibrated_prob": 0.17766,
+      "mean_pred": 0.147262,
+      "n": 20,
+      "obs_rate": 0.25
+    },
+    "city=all|h=0-2h|p=0.2-0.3": {
+      "calibrated_prob": 0.136903,
+      "mean_pred": 0.271769,
+      "n": 11,
+      "obs_rate": 0.090909
     },
     "city=all|h=0-2h|p=0.3-0.4": {
-      "calibrated_prob": 0.139392,
-      "mean_pred": 0.364595,
-      "n": 8,
-      "obs_rate": 0.0
+      "calibrated_prob": 0.231947,
+      "mean_pred": 0.358906,
+      "n": 12,
+      "obs_rate": 0.333333
     },
     "city=all|h=0-2h|p=0.8-0.9": {
-      "calibrated_prob": 0.234588,
+      "calibrated_prob": 0.235296,
       "mean_pred": 0.846015,
       "n": 10,
       "obs_rate": 0.0
     },
     "city=all|h=all|p=0.0-0.1": {
-      "calibrated_prob": 0.099175,
-      "mean_pred": 0.025691,
-      "n": 147,
-      "obs_rate": 0.102041
+      "calibrated_prob": 0.0923,
+      "mean_pred": 0.024628,
+      "n": 225,
+      "obs_rate": 0.093333
     },
     "city=all|h=all|p=0.1-0.2": {
-      "calibrated_prob": 0.193603,
-      "mean_pred": 0.142963,
-      "n": 16,
-      "obs_rate": 0.3125
+      "calibrated_prob": 0.17766,
+      "mean_pred": 0.147262,
+      "n": 20,
+      "obs_rate": 0.25
+    },
+    "city=all|h=all|p=0.2-0.3": {
+      "calibrated_prob": 0.136903,
+      "mean_pred": 0.271769,
+      "n": 11,
+      "obs_rate": 0.090909
     },
     "city=all|h=all|p=0.3-0.4": {
-      "calibrated_prob": 0.139392,
-      "mean_pred": 0.364595,
-      "n": 8,
-      "obs_rate": 0.0
+      "calibrated_prob": 0.231947,
+      "mean_pred": 0.358906,
+      "n": 12,
+      "obs_rate": 0.333333
     },
     "city=all|h=all|p=0.8-0.9": {
-      "calibrated_prob": 0.234588,
+      "calibrated_prob": 0.235296,
       "mean_pred": 0.846015,
       "n": 10,
       "obs_rate": 0.0
     }
   },
   "meta": {
-    "global_mean_pred": 0.135936,
-    "global_obs_rate": 0.106599,
+    "global_mean_pred": 0.110445,
+    "global_obs_rate": 0.108014,
     "min_bin_samples": 8,
     "restrict_status": null,
-    "rows_labeled": 197,
-    "rows_total": 7152,
+    "rows_labeled": 287,
+    "rows_total": 7503,
     "shrinkage_n": 25
   },
   "schema_version": 1
