@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-24T13:44:33.039313+00:00",
+  "as_of_utc": "2026-02-24T14:15:50.957640+00:00",
   "closed_breakdowns": {
     "by_city": {
       "Atlanta": {
@@ -301,7 +301,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.14,
       "event_slug": "",
-      "hours_to_target_now": -4.742511,
+      "hours_to_target_now": -5.264155,
       "mark_position_price": 0.115,
       "mark_quote_time_utc": "2026-02-23T15:34:33.606858+00:00",
       "mark_yes_mid": 0.115,
@@ -318,7 +318,7 @@
       "entry_horizon_bucket": "2-6h",
       "entry_price": 0.5700000000000001,
       "event_slug": "highest-temperature-in-dallas-on-february-24-2026",
-      "hours_to_target_now": -1.742511,
+      "hours_to_target_now": -2.264155,
       "market_id": "1413708",
       "signal_time_utc": "2026-02-24T06:52:03.837206+00:00",
       "size_usd": 5.0,
@@ -330,7 +330,7 @@
       "entry_horizon_bucket": "<2h",
       "entry_price": 0.41000000000000003,
       "event_slug": "highest-temperature-in-nyc-on-february-24-2026",
-      "hours_to_target_now": -1.742511,
+      "hours_to_target_now": -2.264155,
       "market_id": "1413701",
       "signal_time_utc": "2026-02-24T11:55:56.735546+00:00",
       "size_usd": 5.0,
