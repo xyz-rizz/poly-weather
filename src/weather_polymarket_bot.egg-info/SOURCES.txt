@@ -11,6 +11,7 @@ src/weather_bot/calibration_walkforward.py
 src/weather_bot/feature_export.py
 src/weather_bot/health.py
 src/weather_bot/main.py
+src/weather_bot/paper_settlement_reconcile.py
 src/weather_bot/reconcile.py
 src/weather_bot/replay_backtest.py
 src/weather_bot/replay_report.py

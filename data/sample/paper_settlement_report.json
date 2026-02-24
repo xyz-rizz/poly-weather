@@ -1,0 +1,18 @@
+{
+  "as_of_utc": "2026-02-24T05:08:58.201055+00:00",
+  "duplicate_signals_skipped": 147,
+  "journal_path": "data/sample/paper_journal.jsonl",
+  "ledger_path": "data/sample/paper_settlement_ledger.jsonl",
+  "losses_this_run": 0,
+  "malformed_signals_skipped": 0,
+  "open_positions": 9,
+  "positions_added": 10,
+  "realized_pnl_delta_usd": 5.638298,
+  "realized_pnl_total_usd": 5.638298,
+  "resolved_market_ids_available": 485,
+  "settled_this_run": 1,
+  "settled_trades_total": 1,
+  "signals_seen": 157,
+  "state_path": "data/sample/paper_settlement_state.json",
+  "wins_this_run": 1
+}
