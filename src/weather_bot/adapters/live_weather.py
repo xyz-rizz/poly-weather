@@ -64,6 +64,52 @@ def _payload_updated_time(payload: dict[str, Any], default: datetime) -> datetim
     return default
 
 
+def _period_pop_pct(period: dict[str, Any]) -> float | None:
+    pop = period.get("probabilityOfPrecipitation", {})
+    if isinstance(pop, dict) and isinstance(pop.get("value"), (int, float)):
+        return max(0.0, min(100.0, float(pop["value"])))
+    return None
+
+
+def _period_cloud_cover_pct(period: dict[str, Any]) -> float | None:
+    sky = period.get("skyCover", {})
+    if isinstance(sky, dict) and isinstance(sky.get("value"), (int, float)):
+        return max(0.0, min(100.0, float(sky["value"])))
+    txt = " ".join(
+        str(period.get(k) or "") for k in ("shortForecast", "detailedForecast")
+    ).lower()
+    if not txt:
+        return None
+    if any(w in txt for w in ("overcast", "mostly cloudy")):
+        return 80.0
+    if any(w in txt for w in ("cloudy", "partly cloudy", "partly sunny")):
+        return 55.0
+    if any(w in txt for w in ("sunny", "clear")):
+        return 15.0
+    return None
+
+
+def _period_weather_risk_score(period: dict[str, Any]) -> float | None:
+    txt = " ".join(
+        str(period.get(k) or "") for k in ("shortForecast", "detailedForecast")
+    ).lower()
+    pop = _period_pop_pct(period) or 0.0
+    risk = 0.0
+    if pop >= 20:
+        risk += min(0.5, pop / 200.0)
+    if any(w in txt for w in ("thunder", "storm")):
+        risk += 0.35
+    if any(w in txt for w in ("showers", "rain", "drizzle", "precip")):
+        risk += 0.20
+    if any(w in txt for w in ("fog", "mist", "haze")):
+        risk += 0.10
+    cloud = _period_cloud_cover_pct(period)
+    if cloud is not None and cloud >= 70:
+        risk += 0.10
+    risk = max(0.0, min(1.0, risk))
+    return risk if risk > 0 else None
+
+
 @dataclass(frozen=True)
 class CityWeatherConfig:
     city: str
@@ -122,6 +168,9 @@ class NwsHourlyForecastSource(ForecastSource):
                         high_f=float(temp_f) + 2.5,
                         confidence=confidence,
                         updated_at_utc=_payload_updated_time(payload, created),
+                        pop_pct=_period_pop_pct(period),
+                        cloud_cover_pct=_period_cloud_cover_pct(period),
+                        weather_risk_score=_period_weather_risk_score(period),
                     )
                 )
         return ForecastSnapshot(points=points, created_at_utc=created)
@@ -197,6 +246,9 @@ class NwsDailyHighForecastSource(ForecastSource):
                         high_f=float(temp_f) + 4.5,
                         confidence=0.65,
                         updated_at_utc=_payload_updated_time(payload, created),
+                        pop_pct=_period_pop_pct(period),
+                        cloud_cover_pct=_period_cloud_cover_pct(period),
+                        weather_risk_score=_period_weather_risk_score(period),
                     )
                 )
         return ForecastSnapshot(points=points, created_at_utc=created)
@@ -281,6 +333,17 @@ class NwsHourlyPathHighForecastSource(ForecastSource):
                     if isinstance(pop, dict) and isinstance(pop.get("value"), (int, float)):
                         precip_vals.append(float(pop["value"]))
                 avg_pop = (sum(precip_vals) / len(precip_vals)) if precip_vals else 20.0
+                cloud_vals = []
+                risk_vals = []
+                for _, _, _, period in path:
+                    cc = _period_cloud_cover_pct(period)
+                    if cc is not None:
+                        cloud_vals.append(cc)
+                    wr = _period_weather_risk_score(period)
+                    if wr is not None:
+                        risk_vals.append(wr)
+                avg_cloud = (sum(cloud_vals) / len(cloud_vals)) if cloud_vals else None
+                path_risk = max(risk_vals) if risk_vals else None
 
                 hours_remaining = max(0.0, min(24.0, (target_time_utc - now_utc).total_seconds() / 3600))
                 band = 2.5 + (hours_remaining / 12.0) + (avg_pop / 100.0) * 1.5
@@ -295,6 +358,9 @@ class NwsHourlyPathHighForecastSource(ForecastSource):
                         high_f=max_temp + band,
                         confidence=max(0.3, min(0.9, 0.85 - (avg_pop / 200.0))),
                         updated_at_utc=_payload_updated_time(payload, created),
+                        pop_pct=avg_pop,
+                        cloud_cover_pct=avg_cloud,
+                        weather_risk_score=path_risk,
                     )
                 )
         return ForecastSnapshot(points=points, created_at_utc=created)

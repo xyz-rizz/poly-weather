@@ -15,6 +15,9 @@ class ForecastPoint:
     high_f: float | None = None
     confidence: float | None = None
     updated_at_utc: datetime | None = None
+    pop_pct: float | None = None
+    cloud_cover_pct: float | None = None
+    weather_risk_score: float | None = None
 
 
 @dataclass(frozen=True)

@@ -28,6 +28,11 @@ def estimate_bucket_probability(points: list[ForecastPoint], market: WeatherMark
             std = 3.0
         if p.source.startswith("nws-daily"):
             std = max(std, 3.5)
+        pop = p.pop_pct if p.pop_pct is not None else 0.0
+        cloud = p.cloud_cover_pct if p.cloud_cover_pct is not None else 0.0
+        wx_risk = p.weather_risk_score if p.weather_risk_score is not None else 0.0
+        # Weather instability widens bucket uncertainty for daily highs.
+        std *= (1.0 + min(0.50, (pop / 100.0) * 0.30 + (cloud / 100.0) * 0.10 + wx_risk * 0.35))
         upper = _normal_cdf(market.bucket_high_f, p.expected_temp_f, std) if market.bucket_high_f < 900 else 1.0
         lower = _normal_cdf(market.bucket_low_f, p.expected_temp_f, std) if market.bucket_low_f > -900 else 0.0
         prob = max(0.0, min(1.0, upper - lower))
@@ -95,6 +100,9 @@ def build_opportunity(
     liq = liquidity_score(quote, cfg)
     uncertainty_score = max(0.0, 1.0 - uncertainty_spread)
     obs_score = observation_alignment_score(obs, forecasts, now_utc)
+    wx_instability = forecast_weather_instability_score(forecasts)
+    uncertainty_score = max(0.0, uncertainty_score * (1.0 - 0.35 * wx_instability))
+    obs_score = max(0.0, obs_score * (1.0 - 0.20 * wx_instability))
     w = cfg.score_weights
     confidence = (
         w["consensus"] * consensus_score
@@ -112,6 +120,8 @@ def build_opportunity(
         reasons.append("Forecast sources broadly aligned")
     if liq > 0.6:
         reasons.append("Liquidity acceptable for small-size testing")
+    if wx_instability >= 0.5:
+        reasons.append("Elevated weather instability (precip/cloud risk) reduced confidence")
     if cal.profile_hit:
         reasons.append(f"Probability calibrated from empirical profile ({cal.profile_key})")
 
@@ -126,6 +136,20 @@ def build_opportunity(
         uncertainty_score=uncertainty_score,
         reasons=reasons,
     )
+
+
+def forecast_weather_instability_score(forecasts: list[ForecastPoint]) -> float:
+    if not forecasts:
+        return 0.0
+    vals: list[float] = []
+    for p in forecasts:
+        pop = (p.pop_pct or 0.0) / 100.0
+        cloud = (p.cloud_cover_pct or 0.0) / 100.0
+        wx = p.weather_risk_score or 0.0
+        vals.append(max(0.0, min(1.0, 0.45 * pop + 0.15 * cloud + 0.40 * wx)))
+    if not vals:
+        return 0.0
+    return max(vals) * 0.6 + (sum(vals) / len(vals)) * 0.4
 
 
 def _apply_observation_bounds(model_prob: float, market: WeatherMarket, obs: ObservationSnapshot) -> float:

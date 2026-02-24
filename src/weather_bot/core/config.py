@@ -8,6 +8,8 @@ class ScanConfig:
     strategy_id: str = "weather-baseline-v1"
     cities: list[str] = field(default_factory=lambda: ["NYC", "Atlanta", "Dallas", "Chicago", "Seattle"])
     min_edge: float = 0.08
+    min_edge_buy_yes: float = 0.12
+    min_edge_buy_no: float = 0.08
     min_confidence_score: float = 0.55
     max_spread: float = 0.18
     min_top_depth: float = 20.0
@@ -20,6 +22,10 @@ class ScanConfig:
     max_city_exposure_usd: float = 30.0
     daily_loss_cap_usd: float = 25.0
     min_position_entry_price: float = 0.03
+    allow_buy_yes: bool = True
+    allow_buy_no: bool = True
+    min_yes_price_for_buy_yes: float = 0.08
+    max_no_price_for_buy_no: float = 0.92
     take_profit_pct: float = 0.35
     stop_loss_pct: float = 0.20
     max_forecast_age_minutes: float = 180.0

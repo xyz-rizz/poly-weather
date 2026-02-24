@@ -233,6 +233,10 @@ class WeatherScanPipeline:
                 ev.status = "skipped"
                 ev.reason = f"confidence {opp.confidence_score:.3f} below threshold"
                 skipped.append(f"{ev.market.market_id}: {ev.reason}")
+            elif not self._passes_directional_filters(opp):
+                ev.status = "skipped"
+                ev.reason = self._directional_filter_reason(opp)
+                skipped.append(f"{ev.market.market_id}: {ev.reason}")
             else:
                 ev.status = "opportunity"
                 ev.reason = None
@@ -373,6 +377,44 @@ class WeatherScanPipeline:
             opp.reasons.insert(0, "Undervalued YES bucket by model probability")
         elif opp.edge <= -self.config.min_edge:
             opp.reasons.insert(0, "Overvalued YES bucket by model probability")
+
+    def _passes_directional_filters(self, opp: Opportunity) -> bool:
+        direction = "BUY_YES" if opp.edge > 0 else "BUY_NO"
+        if direction == "BUY_YES":
+            if not self.config.allow_buy_yes:
+                return False
+            if abs(opp.edge) < self.config.min_edge_buy_yes:
+                return False
+            if opp.quote.yes_ask < self.config.min_yes_price_for_buy_yes:
+                return False
+        else:
+            if not self.config.allow_buy_no:
+                return False
+            if abs(opp.edge) < self.config.min_edge_buy_no:
+                return False
+            no_entry = max(0.0, min(1.0, opp.quote.no_ask))
+            if no_entry > self.config.max_no_price_for_buy_no:
+                return False
+        return True
+
+    def _directional_filter_reason(self, opp: Opportunity) -> str:
+        direction = "BUY_YES" if opp.edge > 0 else "BUY_NO"
+        if direction == "BUY_YES":
+            if not self.config.allow_buy_yes:
+                return "BUY_YES disabled by strategy profile"
+            if abs(opp.edge) < self.config.min_edge_buy_yes:
+                return f"BUY_YES edge {abs(opp.edge):.3f} below directional threshold"
+            if opp.quote.yes_ask < self.config.min_yes_price_for_buy_yes:
+                return f"BUY_YES ask {opp.quote.yes_ask:.3f} below min price filter"
+        else:
+            if not self.config.allow_buy_no:
+                return "BUY_NO disabled by strategy profile"
+            if abs(opp.edge) < self.config.min_edge_buy_no:
+                return f"BUY_NO edge {abs(opp.edge):.3f} below directional threshold"
+            no_entry = max(0.0, min(1.0, opp.quote.no_ask))
+            if no_entry > self.config.max_no_price_for_buy_no:
+                return f"BUY_NO ask {no_entry:.3f} above max price filter"
+        return "directional filter rejected"
 
     def _quote_age_limit_seconds(self, market: WeatherMarket, quote: MarketQuote, now_utc: datetime) -> float:
         base = self.config.max_quote_age_seconds

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 
 from weather_bot.adapters.live_weather import (
@@ -34,6 +34,23 @@ from weather_bot.simulation.portfolio_state import (
     save_portfolio_state,
 )
 from weather_bot.simulation.scan_recorder import write_scan_snapshot
+
+
+def _env_bool(name: str, default: bool) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _env_float(name: str, default: float) -> float:
+    raw = os.getenv(name)
+    if raw is None or not raw.strip():
+        return default
+    try:
+        return float(raw)
+    except ValueError:
+        return default
 
 
 def _build_pipeline(cfg: ScanConfig) -> WeatherScanPipeline:
@@ -110,7 +127,16 @@ def _build_pipeline(cfg: ScanConfig) -> WeatherScanPipeline:
 
 
 def main() -> int:
-    cfg = ScanConfig()
+    base_cfg = ScanConfig()
+    cfg = replace(
+        base_cfg,
+        allow_buy_yes=_env_bool("WEATHER_BOT_ALLOW_BUY_YES", base_cfg.allow_buy_yes),
+        allow_buy_no=_env_bool("WEATHER_BOT_ALLOW_BUY_NO", base_cfg.allow_buy_no),
+        min_yes_price_for_buy_yes=_env_float("WEATHER_BOT_MIN_YES_PRICE_FOR_BUY_YES", base_cfg.min_yes_price_for_buy_yes),
+        max_no_price_for_buy_no=_env_float("WEATHER_BOT_MAX_NO_PRICE_FOR_BUY_NO", base_cfg.max_no_price_for_buy_no),
+        min_edge_buy_yes=_env_float("WEATHER_BOT_MIN_EDGE_BUY_YES", base_cfg.min_edge_buy_yes),
+        min_edge_buy_no=_env_float("WEATHER_BOT_MIN_EDGE_BUY_NO", base_cfg.min_edge_buy_no),
+    )
     mode = os.getenv("WEATHER_BOT_MODE", "mock").lower().strip()
     pipeline = _build_pipeline(cfg)
 
