@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-24T05:08:58.198847+00:00",
+  "as_of_utc": "2026-02-24T05:40:44.145370+00:00",
   "closed_market_ids": [
     "1407218"
   ],
@@ -12,7 +12,8 @@
       "market_id": "wx_sea_60_62",
       "signal_time_utc": "2026-02-23T12:04:12.465544+00:00",
       "size_usd": 5.0,
-      "source_event_type": "signal"
+      "source_event_type": "signal",
+      "target_time_utc": null
     },
     {
       "city": "Atlanta",
@@ -22,7 +23,8 @@
       "market_id": "1413715",
       "signal_time_utc": "2026-02-23T12:46:54.139817+00:00",
       "size_usd": 5.0,
-      "source_event_type": "signal"
+      "source_event_type": "signal",
+      "target_time_utc": null
     },
     {
       "city": "Atlanta",
@@ -32,7 +34,8 @@
       "market_id": "1407238",
       "signal_time_utc": "2026-02-23T12:50:57.632777+00:00",
       "size_usd": 5.0,
-      "source_event_type": "signal"
+      "source_event_type": "signal",
+      "target_time_utc": null
     },
     {
       "city": "Atlanta",
@@ -42,7 +45,8 @@
       "market_id": "1407239",
       "signal_time_utc": "2026-02-23T12:56:31.843668+00:00",
       "size_usd": 5.0,
-      "source_event_type": "signal"
+      "source_event_type": "signal",
+      "target_time_utc": null
     },
     {
       "city": "Atlanta",
@@ -52,7 +56,8 @@
       "market_id": "1413721",
       "signal_time_utc": "2026-02-23T15:35:19.232299+00:00",
       "size_usd": 5.0,
-      "source_event_type": "signal"
+      "source_event_type": "signal",
+      "target_time_utc": null
     },
     {
       "city": "NYC",
@@ -62,7 +67,8 @@
       "market_id": "1413700",
       "signal_time_utc": "2026-02-23T18:22:47.498049+00:00",
       "size_usd": 5.0,
-      "source_event_type": "signal"
+      "source_event_type": "signal",
+      "target_time_utc": null
     },
     {
       "city": "NYC",
@@ -72,7 +78,8 @@
       "market_id": "1413702",
       "signal_time_utc": "2026-02-23T19:57:43.506773+00:00",
       "size_usd": 5.0,
-      "source_event_type": "signal"
+      "source_event_type": "signal",
+      "target_time_utc": null
     },
     {
       "city": "NYC",
@@ -82,7 +89,8 @@
       "market_id": "1413703",
       "signal_time_utc": "2026-02-23T20:42:43.944821+00:00",
       "size_usd": 5.0,
-      "source_event_type": "signal"
+      "source_event_type": "signal",
+      "target_time_utc": null
     },
     {
       "city": "Dallas",
@@ -92,7 +100,8 @@
       "market_id": "1413709",
       "signal_time_utc": "2026-02-23T23:57:48.809885+00:00",
       "size_usd": 5.0,
-      "source_event_type": "signal"
+      "source_event_type": "signal",
+      "target_time_utc": null
     }
   ],
   "realized_pnl_usd": 5.638297872340425,
