@@ -7,8 +7,9 @@ Recommended rollout order:
 1. `paper-mode runner` (continuous scans + logs)
 2. `settlement-triggered calibration refresh` (checks for new settled overlaps and refreshes when needed)
 3. `daily calibration refresh` fallback (optional)
-3. `monitoring/alerts`
-4. only later: live execution (not included yet)
+4. `git autosave` (optional, every 30 min)
+5. `monitoring/alerts`
+6. only later: live execution (not included yet)
 
 ## Recommended Instance (AWS)
 
@@ -57,6 +58,8 @@ sudo cp deploy/systemd/weather-bot-calibration-refresh.service /etc/systemd/syst
 sudo cp deploy/systemd/weather-bot-calibration-refresh.timer /etc/systemd/system/
 sudo cp deploy/systemd/weather-bot-settlement-trigger.service /etc/systemd/system/
 sudo cp deploy/systemd/weather-bot-settlement-trigger.timer /etc/systemd/system/
+sudo cp deploy/systemd/weather-bot-git-autosave.service /etc/systemd/system/
+sudo cp deploy/systemd/weather-bot-git-autosave.timer /etc/systemd/system/
 sudo systemctl daemon-reload
 ```
 
@@ -106,6 +109,27 @@ Manual trigger check:
 sudo systemctl start weather-bot-settlement-trigger.service
 journalctl -u weather-bot-settlement-trigger.service -n 200 --no-pager
 ```
+
+## Optional: Git Autosave Every 30 Minutes
+
+This will commit and push runtime changes (scan snapshots, reports, journals) to GitHub automatically.
+
+```bash
+sudo systemctl enable --now weather-bot-git-autosave.timer
+sudo systemctl list-timers | rg weather-bot-git-autosave
+```
+
+Manual run:
+
+```bash
+sudo systemctl start weather-bot-git-autosave.service
+journalctl -u weather-bot-git-autosave.service -n 200 --no-pager
+```
+
+Notes:
+- It commits only when there are actual git changes.
+- It uses a file lock to avoid overlapping runs.
+- This will grow the repository quickly because `scan_snapshots.jsonl` is large and changes frequently.
 
 ## Data / Outputs to Watch
 

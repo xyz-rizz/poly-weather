@@ -1,0 +1,16 @@
+[Unit]
+Description=Weather Bot Git Autosave (commit and push changes)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+WorkingDirectory=/opt/weather-polymarket-bot
+Environment=ROOT_DIR=/opt/weather-polymarket-bot
+ExecStart=/usr/bin/env bash /opt/weather-polymarket-bot/deploy/aws/run_git_autosave.sh
+TimeoutStartSec=1800
+
+StandardOutput=journal
+StandardError=journal
+

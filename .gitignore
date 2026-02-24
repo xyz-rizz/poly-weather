@@ -9,3 +9,5 @@ __pycache__/
 # Local deployment env (contains machine-specific values / contact info)
 .env.weather-bot
 
+# Generated trigger state (runtime checkpoint)
+data/sample/settlement_trigger_state.json

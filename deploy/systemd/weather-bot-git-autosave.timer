@@ -1,0 +1,13 @@
+[Unit]
+Description=Run Weather Bot Git Autosave Every 30 Minutes
+
+[Timer]
+OnBootSec=20m
+OnUnitActiveSec=30m
+AccuracySec=2m
+Persistent=true
+Unit=weather-bot-git-autosave.service
+
+[Install]
+WantedBy=timers.target
+
