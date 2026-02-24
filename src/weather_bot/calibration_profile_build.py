@@ -259,7 +259,7 @@ def build_calibration_profile(
             "summary": {
                 "rows_total": len(rows),
                 "rows_labeled": len(labeled_rows),
-                "profile_bins": len(bin_adjustments),
+                "profile_bins": int(base_result.get("profile_bins") or 0),
                 "global_mean_pred": round(global_pred, 6),
                 "global_obs_rate": round(global_obs, 6),
             },
