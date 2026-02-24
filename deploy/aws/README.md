@@ -5,7 +5,8 @@ This project is ready to run on a VPS so you can collect data continuously witho
 Recommended rollout order:
 
 1. `paper-mode runner` (continuous scans + logs)
-2. `daily calibration refresh` (labels/profile/reports)
+2. `settlement-triggered calibration refresh` (checks for new settled overlaps and refreshes when needed)
+3. `daily calibration refresh` fallback (optional)
 3. `monitoring/alerts`
 4. only later: live execution (not included yet)
 
@@ -54,6 +55,8 @@ Minimum required:
 sudo cp deploy/systemd/weather-bot-runner.service /etc/systemd/system/
 sudo cp deploy/systemd/weather-bot-calibration-refresh.service /etc/systemd/system/
 sudo cp deploy/systemd/weather-bot-calibration-refresh.timer /etc/systemd/system/
+sudo cp deploy/systemd/weather-bot-settlement-trigger.service /etc/systemd/system/
+sudo cp deploy/systemd/weather-bot-settlement-trigger.timer /etc/systemd/system/
 sudo systemctl daemon-reload
 ```
 
@@ -74,6 +77,17 @@ journalctl -u weather-bot-runner.service -f
 
 ## Start Daily Calibration Refresh
 
+Recommended primary mode:
+
+```bash
+sudo systemctl enable --now weather-bot-settlement-trigger.timer
+sudo systemctl list-timers | rg weather-bot-settlement
+```
+
+This checks every ~15 minutes and runs calibration refresh only when new settled markets overlap your stored scans.
+
+Fallback daily mode (optional, can run alongside trigger):
+
 ```bash
 sudo systemctl enable --now weather-bot-calibration-refresh.timer
 sudo systemctl list-timers | rg weather-bot
@@ -86,6 +100,13 @@ sudo systemctl start weather-bot-calibration-refresh.service
 journalctl -u weather-bot-calibration-refresh.service -n 200 --no-pager
 ```
 
+Manual trigger check:
+
+```bash
+sudo systemctl start weather-bot-settlement-trigger.service
+journalctl -u weather-bot-settlement-trigger.service -n 200 --no-pager
+```
+
 ## Data / Outputs to Watch
 
 - `data/sample/scan_snapshots.jsonl`
@@ -94,6 +115,7 @@ journalctl -u weather-bot-calibration-refresh.service -n 200 --no-pager
 - `data/sample/calibration_effectiveness_report.json`
 - `data/sample/calibration_walkforward_report.json`
 - `data/sample/threshold_sweep_report.json`
+- `data/sample/settlement_trigger_state.json`
 
 ## Security Notes (Important)
 
@@ -102,4 +124,3 @@ journalctl -u weather-bot-calibration-refresh.service -n 200 --no-pager
 - Use a non-root user for normal operations.
 - Restrict SSH (`ufw` / security group).
 - Keep the instance clock synced (default `systemd-timesyncd` is usually enough).
-

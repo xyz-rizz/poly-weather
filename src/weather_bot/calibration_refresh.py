@@ -11,7 +11,7 @@ from weather_bot.feature_export import export_feature_rows
 from weather_bot.threshold_sweep import threshold_sweep_report
 
 
-def main() -> int:
+def run_calibration_refresh() -> dict:
     base_dir = Path(os.getenv("WEATHER_BOT_RUNNER_BASEDIR", "data/sample"))
     feature_rows_path = Path(os.getenv("WEATHER_BOT_FEATURE_EXPORT_PATH", str(base_dir / "feature_rows_export.jsonl")))
     profile_path = Path(os.getenv("WEATHER_BOT_CAL_PROFILE_OUT", str(base_dir / "calibration_profile.json")))
@@ -76,24 +76,23 @@ def main() -> int:
         restrict_status=(os.getenv("WEATHER_BOT_CAL_RESTRICT_STATUS") or None),
     )
 
-    print(
-        json.dumps(
-            {
-                "export": export_result,
-                "profile_build": build_result,
-                "effectiveness_report_path": str(effectiveness_path),
-                "effectiveness_summary": effectiveness.get("summary"),
-                "threshold_sweep_report_path": str(threshold_sweep_path),
-                "threshold_sweep_summary": threshold_report.get("summary"),
-                "walkforward_report_path": str(walkforward_path),
-                "walkforward_summary": walkforward.get("summary"),
-                "walkforward_aggregate": walkforward.get("aggregate"),
-                "runtime_profile_path_hint": str(profile_path),
-            },
-            indent=2,
-            sort_keys=True,
-        )
-    )
+    return {
+        "export": export_result,
+        "profile_build": build_result,
+        "effectiveness_report_path": str(effectiveness_path),
+        "effectiveness_summary": effectiveness.get("summary"),
+        "threshold_sweep_report_path": str(threshold_sweep_path),
+        "threshold_sweep_summary": threshold_report.get("summary"),
+        "walkforward_report_path": str(walkforward_path),
+        "walkforward_summary": walkforward.get("summary"),
+        "walkforward_aggregate": walkforward.get("aggregate"),
+        "runtime_profile_path_hint": str(profile_path),
+    }
+
+
+def main() -> int:
+    result = run_calibration_refresh()
+    print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
 

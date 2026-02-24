@@ -1,0 +1,16 @@
+[Unit]
+Description=Weather Bot Settlement Trigger (run calibration on new settled overlaps)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+WorkingDirectory=/opt/weather-polymarket-bot
+Environment=ROOT_DIR=/opt/weather-polymarket-bot
+ExecStart=/usr/bin/env bash /opt/weather-polymarket-bot/deploy/aws/run_settlement_trigger.sh
+TimeoutStartSec=1800
+
+StandardOutput=journal
+StandardError=journal
+

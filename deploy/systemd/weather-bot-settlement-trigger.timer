@@ -1,0 +1,13 @@
+[Unit]
+Description=Check for newly settled weather markets and trigger calibration refresh
+
+[Timer]
+OnBootSec=15m
+OnUnitActiveSec=15m
+AccuracySec=2m
+Persistent=true
+Unit=weather-bot-settlement-trigger.service
+
+[Install]
+WantedBy=timers.target
+
