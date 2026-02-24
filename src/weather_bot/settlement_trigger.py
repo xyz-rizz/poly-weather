@@ -99,6 +99,7 @@ def run_settlement_trigger() -> dict[str, Any]:
                 "closed_this_run",
                 "settled_this_run",
                 "mark_exits_this_run",
+                "partial_mark_exits_this_run",
                 "metadata_backfills_this_run",
                 "realized_pnl_delta_usd",
                 "realized_pnl_total_usd",

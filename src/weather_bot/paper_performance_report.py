@@ -160,6 +160,7 @@ def build_paper_performance_report(*, base_dir: Path, out_path: Path | None = No
         rr["exit_regime_key"] = str(r.get("exit_regime_key") or "default")
         rr["exit_regime_horizon"] = str(r.get("exit_regime_horizon") or "unknown")
         rr["exit_regime_city"] = str(r.get("exit_regime_city") or (r.get("city") or "unknown"))
+        rr["partial_exit"] = bool(r.get("partial_exit", False))
         closed_rows.append(rr)
 
     overall = _bucket_metrics(closed_rows)
@@ -246,10 +247,15 @@ def build_paper_performance_report(*, base_dir: Path, out_path: Path | None = No
             "by_entry_horizon": _group_metrics(closed_rows, lambda r: r.get("entry_horizon_bucket")),
             "by_exit_regime": _group_metrics(closed_rows, lambda r: r.get("exit_regime_key")),
             "by_exit_regime_horizon": _group_metrics(closed_rows, lambda r: r.get("exit_regime_horizon")),
+            "by_partial_exit": _group_metrics(closed_rows, lambda r: "partial" if r.get("partial_exit") else "full"),
         },
         "closed_counts": {
             "event_types": dict(event_type_counts),
             "exit_reasons": dict(exit_reason_counts),
+            "partial_exits": {
+                "partial": sum(1 for r in closed_rows if r.get("partial_exit")),
+                "full": sum(1 for r in closed_rows if not r.get("partial_exit")),
+            },
         },
         "open_summary": {
             "open_positions": len(open_rows),

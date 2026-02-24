@@ -98,6 +98,10 @@ Paper mark-exit tuning (optional in `.env.weather-bot`):
 - `WEATHER_BOT_PAPER_TAKE_PROFIT_PCT` (default `0.35`)
 - `WEATHER_BOT_PAPER_STOP_LOSS_PCT` (default `0.20`)
 - `WEATHER_BOT_PAPER_TIME_STOP_GRACE_SECONDS` (default `300`)
+- `WEATHER_BOT_PAPER_PARTIAL_TP_ENABLED` (default `1`)
+- `WEATHER_BOT_PAPER_PARTIAL_TP_FRACTION` (default `0.5`)
+- `WEATHER_BOT_PAPER_PARTIAL_TP_MIN_CLOSE_USD` (default `1.0`)
+- `WEATHER_BOT_PAPER_PARTIAL_TP_MIN_REMAINING_USD` (default `1.0`)
 - `WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_PATH` (JSON file for city/horizon overrides)
 - `WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_JSON` (inline JSON overrides; useful for quick experiments)
 
@@ -164,7 +168,7 @@ Notes:
 - `data/sample/paper_settlement_report.json`
 - `data/sample/paper_performance_report.json`
 
-`paper_performance_report.json` now includes breakdowns by `exit_reason`, `city`, `direction`, `entry_horizon`, and `exit_regime`, plus simple tuning-candidate suggestions based on realized paper trades.
+`paper_performance_report.json` now includes breakdowns by `exit_reason`, `city`, `direction`, `entry_horizon`, `exit_regime`, and `partial-vs-full` exits, plus simple tuning-candidate suggestions based on realized paper trades.
 
 ## Execution Modes (Guarded)
 

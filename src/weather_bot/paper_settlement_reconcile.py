@@ -55,9 +55,11 @@ class PaperSignalPosition:
     city: str
     direction: str
     size_usd: float
+    original_size_usd: float
     entry_price: float
     signal_time_utc: datetime
     target_time_utc: datetime | None = None
+    partial_tp_taken: bool = False
     source_event_type: str = "signal"
 
 
@@ -101,9 +103,11 @@ def load_state(path: Path) -> PaperSettlementState:
                     city=str(row.get("city") or ""),
                     direction=str(row.get("direction") or "BUY_YES"),
                     size_usd=float(row.get("size_usd") or 0.0),
+                    original_size_usd=float(row.get("original_size_usd") or row.get("size_usd") or 0.0),
                     entry_price=float(row.get("entry_price") or 0.5),
                     signal_time_utc=dt,
                     target_time_utc=_parse_dt(row.get("target_time_utc")),
+                    partial_tp_taken=bool(row.get("partial_tp_taken", False)),
                     source_event_type=str(row.get("source_event_type") or "signal"),
                 )
             )
@@ -414,6 +418,10 @@ def _mark_yes_mid_from_row(row: dict[str, Any]) -> float | None:
     return None
 
 
+def _bounded_fraction(value: float) -> float:
+    return max(0.0, min(1.0, value))
+
+
 def run_paper_settlement_reconcile() -> dict[str, Any]:
     base_dir = Path(os.getenv("WEATHER_BOT_RUNNER_BASEDIR", "data/sample"))
     journal_path = Path(os.getenv("WEATHER_BOT_PAPER_JOURNAL_PATH", str(base_dir / "paper_journal.jsonl")))
@@ -424,6 +432,10 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
     take_profit_pct = float(os.getenv("WEATHER_BOT_PAPER_TAKE_PROFIT_PCT", "0.35"))
     stop_loss_pct = float(os.getenv("WEATHER_BOT_PAPER_STOP_LOSS_PCT", "0.20"))
     time_stop_grace_seconds = float(os.getenv("WEATHER_BOT_PAPER_TIME_STOP_GRACE_SECONDS", "300"))
+    partial_tp_enabled = os.getenv("WEATHER_BOT_PAPER_PARTIAL_TP_ENABLED", "1").strip().lower() in {"1", "true", "yes"}
+    partial_tp_fraction = _bounded_fraction(float(os.getenv("WEATHER_BOT_PAPER_PARTIAL_TP_FRACTION", "0.5")))
+    partial_tp_min_close_usd = float(os.getenv("WEATHER_BOT_PAPER_PARTIAL_TP_MIN_CLOSE_USD", "1.0"))
+    partial_tp_min_remaining_usd = float(os.getenv("WEATHER_BOT_PAPER_PARTIAL_TP_MIN_REMAINING_USD", "1.0"))
     exit_regime_profile = _load_exit_regime_profile(
         base_dir=base_dir,
         default_take_profit_pct=take_profit_pct,
@@ -472,9 +484,11 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
             city=str(market.get("city") or ""),
             direction=str(row.get("direction") or "BUY_YES"),
             size_usd=size_usd,
+            original_size_usd=size_usd,
             entry_price=entry_price,
             signal_time_utc=signal_time,
             target_time_utc=_parse_dt(market.get("target_time_utc")),
+            partial_tp_taken=False,
             source_event_type="signal",
         )
         open_by_market[market_id] = pos
@@ -491,6 +505,7 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
 
     settled_now = 0
     mark_exits_now = 0
+    partial_mark_exits_now = 0
     metadata_backfills = 0
     ledger_rows: list[dict[str, Any]] = []
     realized_delta = 0.0
@@ -562,14 +577,33 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
             if decision is None:
                 continue
             exit_price, exit_reason, ret_mark, _ = decision
-            shares = pos.size_usd / max(pos.entry_price, 1e-9)
+            close_size_usd = pos.size_usd
+            partial_exit = False
+            if (
+                partial_tp_enabled
+                and exit_reason == "take_profit"
+                and not pos.partial_tp_taken
+                and 0.0 < partial_tp_fraction < 1.0
+            ):
+                candidate_close = pos.size_usd * partial_tp_fraction
+                candidate_remaining = pos.size_usd - candidate_close
+                if candidate_close >= partial_tp_min_close_usd and candidate_remaining >= partial_tp_min_remaining_usd:
+                    close_size_usd = candidate_close
+                    partial_exit = True
+            shares = close_size_usd / max(pos.entry_price, 1e-9)
             pnl = shares * (exit_price - pos.entry_price)
             ret_realized = (exit_price - pos.entry_price) / max(pos.entry_price, 1e-9)
             mark_yes_mid = _mark_yes_mid_from_row(row)
             mark_exits_now += 1
+            if partial_exit:
+                partial_mark_exits_now += 1
             realized_delta += pnl
-            closed_ids.add(market_id)
-            open_by_market.pop(market_id, None)
+            if partial_exit:
+                pos.size_usd = max(0.0, pos.size_usd - close_size_usd)
+                pos.partial_tp_taken = True
+            else:
+                closed_ids.add(market_id)
+                open_by_market.pop(market_id, None)
             ledger_rows.append(
                 {
                     "event_type": "paper_mark_exit_trade",
@@ -578,7 +612,11 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
                     "event_slug": pos.event_slug or str(row.get("event_slug") or ""),
                     "city": pos.city or str(row.get("city") or ""),
                     "direction": pos.direction,
-                    "size_usd": pos.size_usd,
+                    "size_usd": close_size_usd,
+                    "remaining_size_usd": None if not partial_exit else round(pos.size_usd, 6),
+                    "partial_exit": partial_exit,
+                    "partial_tp_taken_after": pos.partial_tp_taken,
+                    "position_original_size_usd": pos.original_size_usd,
                     "entry_price": round(pos.entry_price, 6),
                     "exit_price": round(exit_price, 6),
                     "shares": round(shares, 6),
@@ -628,6 +666,7 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
         "closed_this_run": len(ledger_rows),
         "settled_this_run": settled_now,
         "mark_exits_this_run": mark_exits_now,
+        "partial_mark_exits_this_run": partial_mark_exits_now,
         "settlement_trades_this_run": settlement_trades_now,
         "wins_this_run": wins,
         "losses_this_run": losses,
@@ -641,6 +680,10 @@ def run_paper_settlement_reconcile() -> dict[str, Any]:
         "take_profit_pct": take_profit_pct,
         "stop_loss_pct": stop_loss_pct,
         "time_stop_grace_seconds": time_stop_grace_seconds,
+        "partial_tp_enabled": partial_tp_enabled,
+        "partial_tp_fraction": partial_tp_fraction,
+        "partial_tp_min_close_usd": partial_tp_min_close_usd,
+        "partial_tp_min_remaining_usd": partial_tp_min_remaining_usd,
         "exit_regime_profile_enabled": bool(os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_PATH", "").strip() or os.getenv("WEATHER_BOT_PAPER_EXIT_REGIME_PROFILE_JSON", "").strip()),
     }
     report_path = Path(os.getenv("WEATHER_BOT_PAPER_SETTLEMENT_REPORT", str(base_dir / "paper_settlement_report.json")))
