@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-25T13:19:24.948888+00:00",
+  "as_of_utc": "2026-02-25T13:49:46.701389+00:00",
   "closed_breakdowns": {
     "by_city": {
       "Atlanta": {
@@ -333,12 +333,12 @@
   "open_breakdowns": {
     "by_city": {
       "Atlanta": {
-        "avg_pnl_usd": 0.487981,
-        "avg_return_pct": 0.097596,
+        "avg_pnl_usd": 0.486178,
+        "avg_return_pct": 0.097236,
         "flat": 0,
         "losses": 0,
         "profit_factor": null,
-        "total_pnl_usd": 0.975962,
+        "total_pnl_usd": 0.972356,
         "trades": 2,
         "win_rate": 1.0,
         "wins": 2
@@ -355,12 +355,12 @@
         "wins": 1
       },
       "NYC": {
-        "avg_pnl_usd": -0.138031,
-        "avg_return_pct": -0.027606,
+        "avg_pnl_usd": -0.123069,
+        "avg_return_pct": -0.024614,
         "flat": 0,
         "losses": 2,
         "profit_factor": 0.0,
-        "total_pnl_usd": -0.276062,
+        "total_pnl_usd": -0.246139,
         "trades": 2,
         "win_rate": 0.0,
         "wins": 0
@@ -379,12 +379,12 @@
     },
     "by_direction": {
       "BUY_NO": {
-        "avg_pnl_usd": 0.177293,
-        "avg_return_pct": 0.035458,
+        "avg_pnl_usd": 0.182557,
+        "avg_return_pct": 0.036511,
         "flat": 0,
         "losses": 2,
-        "profit_factor": 4.211116,
-        "total_pnl_usd": 0.886467,
+        "profit_factor": 4.708409,
+        "total_pnl_usd": 0.912784,
         "trades": 5,
         "win_rate": 0.6,
         "wins": 3
@@ -403,23 +403,23 @@
     },
     "by_entry_horizon": {
       "12-24h": {
-        "avg_pnl_usd": -0.427198,
-        "avg_return_pct": -0.08544,
+        "avg_pnl_usd": -0.311813,
+        "avg_return_pct": -0.062363,
         "flat": 0,
         "losses": 1,
-        "profit_factor": 0.043077,
-        "total_pnl_usd": -0.854395,
+        "profit_factor": 0.301539,
+        "total_pnl_usd": -0.623626,
         "trades": 2,
         "win_rate": 0.5,
         "wins": 1
       },
       "24h+": {
-        "avg_pnl_usd": 0.212001,
-        "avg_return_pct": 0.0424,
+        "avg_pnl_usd": 0.160888,
+        "avg_return_pct": 0.032177,
         "flat": 0,
         "losses": 2,
-        "profit_factor": 4.071792,
-        "total_pnl_usd": 0.848005,
+        "profit_factor": 3.614592,
+        "total_pnl_usd": 0.643553,
         "trades": 4,
         "win_rate": 0.5,
         "wins": 2
@@ -433,7 +433,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.14,
       "event_slug": "",
-      "hours_to_target_now": -28.323597,
+      "hours_to_target_now": -28.829639,
       "mark_position_price": 0.115,
       "mark_quote_time_utc": "2026-02-23T15:34:33.606858+00:00",
       "mark_yes_mid": 0.115,
@@ -450,7 +450,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.83,
       "event_slug": "highest-temperature-in-nyc-on-february-25-2026",
-      "hours_to_target_now": -1.323597,
+      "hours_to_target_now": -1.829639,
       "market_id": "1427448",
       "signal_time_utc": "2026-02-24T16:50:44.773420+00:00",
       "size_usd": 5.0,
@@ -462,9 +462,9 @@
       "entry_horizon_bucket": "24h+",
       "entry_price": 0.6699999999999999,
       "event_slug": "highest-temperature-in-dallas-on-february-26-2026",
-      "hours_to_target_now": 22.676403,
+      "hours_to_target_now": 22.170361,
       "mark_position_price": 0.695,
-      "mark_quote_time_utc": "2026-02-25T13:04:16.855178+00:00",
+      "mark_quote_time_utc": "2026-02-25T13:43:26.340393+00:00",
       "mark_yes_mid": 0.305,
       "market_id": "1425373",
       "signal_time_utc": "2026-02-25T00:16:37.938532+00:00",
@@ -479,16 +479,16 @@
       "entry_horizon_bucket": "24h+",
       "entry_price": 0.74,
       "event_slug": "highest-temperature-in-nyc-on-february-26-2026",
-      "hours_to_target_now": 22.676403,
-      "mark_position_price": 0.715,
-      "mark_quote_time_utc": "2026-02-25T13:03:32.756572+00:00",
-      "mark_yes_mid": 0.285,
+      "hours_to_target_now": 22.170361,
+      "mark_position_price": 0.73,
+      "mark_quote_time_utc": "2026-02-25T13:39:41.329025+00:00",
+      "mark_yes_mid": 0.27,
       "market_id": "1425362",
       "signal_time_utc": "2026-02-25T00:46:42.507118+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-26T12:00:00+00:00",
-      "unrealized_pnl_usd": -0.168919,
-      "unrealized_return_pct": -0.033784
+      "unrealized_pnl_usd": -0.067568,
+      "unrealized_return_pct": -0.013514
     },
     {
       "city": "Atlanta",
@@ -496,16 +496,16 @@
       "entry_horizon_bucket": "24h+",
       "entry_price": 0.64,
       "event_slug": "highest-temperature-in-atlanta-on-february-26-2026",
-      "hours_to_target_now": 22.676403,
-      "mark_position_price": 0.76,
-      "mark_quote_time_utc": "2026-02-25T12:59:57.503091+00:00",
-      "mark_yes_mid": 0.24,
+      "hours_to_target_now": 22.170361,
+      "mark_position_price": 0.73,
+      "mark_quote_time_utc": "2026-02-25T13:38:33.292263+00:00",
+      "mark_yes_mid": 0.27,
       "market_id": "1425379",
       "signal_time_utc": "2026-02-25T00:51:43.791273+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-26T12:00:00+00:00",
-      "unrealized_pnl_usd": 0.9375,
-      "unrealized_return_pct": 0.1875
+      "unrealized_pnl_usd": 0.703125,
+      "unrealized_return_pct": 0.140625
     },
     {
       "city": "NYC",
@@ -513,16 +513,16 @@
       "entry_horizon_bucket": "24h+",
       "entry_price": 0.7,
       "event_slug": "highest-temperature-in-nyc-on-february-26-2026",
-      "hours_to_target_now": 22.676403,
-      "mark_position_price": 0.685,
-      "mark_quote_time_utc": "2026-02-25T13:04:16.249715+00:00",
-      "mark_yes_mid": 0.315,
+      "hours_to_target_now": 22.170361,
+      "mark_position_price": 0.675,
+      "mark_quote_time_utc": "2026-02-25T13:39:49.247381+00:00",
+      "mark_yes_mid": 0.325,
       "market_id": "1425361",
       "signal_time_utc": "2026-02-25T11:13:43.903233+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-26T12:00:00+00:00",
-      "unrealized_pnl_usd": -0.107143,
-      "unrealized_return_pct": -0.021429
+      "unrealized_pnl_usd": -0.178571,
+      "unrealized_return_pct": -0.035714
     },
     {
       "city": "Atlanta",
@@ -530,16 +530,16 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.65,
       "event_slug": "highest-temperature-in-atlanta-on-february-26-2026",
-      "hours_to_target_now": 22.676403,
-      "mark_position_price": 0.655,
-      "mark_quote_time_utc": "2026-02-25T12:59:03.701984+00:00",
-      "mark_yes_mid": 0.345,
+      "hours_to_target_now": 22.170361,
+      "mark_position_price": 0.685,
+      "mark_quote_time_utc": "2026-02-25T13:39:26.709514+00:00",
+      "mark_yes_mid": 0.315,
       "market_id": "1425380",
       "signal_time_utc": "2026-02-25T12:18:59.456444+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-26T12:00:00+00:00",
-      "unrealized_pnl_usd": 0.038462,
-      "unrealized_return_pct": 0.007692
+      "unrealized_pnl_usd": 0.269231,
+      "unrealized_return_pct": 0.053846
     }
   ],
   "open_summary": {
@@ -547,9 +547,9 @@
     "marked_open_positions": 6,
     "open_positions": 7,
     "realized_pnl_from_state_usd": -10.470321,
-    "total_pnl_including_open_usd": -10.476712,
+    "total_pnl_including_open_usd": -10.450394,
     "unmarked_open_positions": 1,
-    "unrealized_pnl_usd": -0.00639
+    "unrealized_pnl_usd": 0.019927
   },
   "state_path": "data/sample/paper_settlement_state.json",
   "tuning_candidates": {
