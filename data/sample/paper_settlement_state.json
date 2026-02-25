@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-25T12:17:02.164746+00:00",
+  "as_of_utc": "2026-02-25T12:47:50.277179+00:00",
   "closed_market_ids": [
     "1407218",
     "1407238",
@@ -84,7 +84,7 @@
       "market_id": "1425379",
       "original_size_usd": 5.0,
       "partial_tp_taken": false,
-      "peak_mark_return_pct": 0.10156249999999992,
+      "peak_mark_return_pct": 0.11718749999999993,
       "signal_time_utc": "2026-02-25T00:51:43.791273+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
@@ -100,6 +100,20 @@
       "partial_tp_taken": false,
       "peak_mark_return_pct": -0.007142857142856991,
       "signal_time_utc": "2026-02-25T11:13:43.903233+00:00",
+      "size_usd": 5.0,
+      "source_event_type": "signal",
+      "target_time_utc": "2026-02-26T12:00:00+00:00"
+    },
+    {
+      "city": "Atlanta",
+      "direction": "BUY_NO",
+      "entry_price": 0.65,
+      "event_slug": "highest-temperature-in-atlanta-on-february-26-2026",
+      "market_id": "1425380",
+      "original_size_usd": 5.0,
+      "partial_tp_taken": false,
+      "peak_mark_return_pct": -0.007692307692307699,
+      "signal_time_utc": "2026-02-25T12:18:59.456444+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-26T12:00:00+00:00"
