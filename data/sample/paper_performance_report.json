@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-25T14:50:03.537794+00:00",
+  "as_of_utc": "2026-02-25T15:20:13.875361+00:00",
   "closed_breakdowns": {
     "by_city": {
       "Atlanta": {
@@ -333,34 +333,34 @@
   "open_breakdowns": {
     "by_city": {
       "Atlanta": {
-        "avg_pnl_usd": 0.096755,
-        "avg_return_pct": 0.019351,
+        "avg_pnl_usd": 0.001502,
+        "avg_return_pct": 0.0003,
         "flat": 0,
-        "losses": 0,
-        "profit_factor": null,
-        "total_pnl_usd": 0.19351,
+        "losses": 1,
+        "profit_factor": 1.015626,
+        "total_pnl_usd": 0.003005,
         "trades": 2,
-        "win_rate": 1.0,
-        "wins": 2
+        "win_rate": 0.5,
+        "wins": 1
       },
       "Dallas": {
-        "avg_pnl_usd": 0.074627,
-        "avg_return_pct": 0.014925,
+        "avg_pnl_usd": 0.11194,
+        "avg_return_pct": 0.022388,
         "flat": 0,
         "losses": 0,
         "profit_factor": null,
-        "total_pnl_usd": 0.074627,
+        "total_pnl_usd": 0.11194,
         "trades": 1,
         "win_rate": 1.0,
         "wins": 1
       },
       "NYC": {
-        "avg_pnl_usd": -0.249035,
-        "avg_return_pct": -0.049807,
-        "flat": 0,
-        "losses": 2,
+        "avg_pnl_usd": -0.214285,
+        "avg_return_pct": -0.042857,
+        "flat": 1,
+        "losses": 1,
         "profit_factor": 0.0,
-        "total_pnl_usd": -0.49807,
+        "total_pnl_usd": -0.428571,
         "trades": 2,
         "win_rate": 0.0,
         "wins": 0
@@ -379,15 +379,15 @@
     },
     "by_direction": {
       "BUY_NO": {
-        "avg_pnl_usd": -0.045987,
-        "avg_return_pct": -0.009197,
-        "flat": 0,
+        "avg_pnl_usd": -0.062725,
+        "avg_return_pct": -0.012545,
+        "flat": 1,
         "losses": 2,
-        "profit_factor": 0.538352,
-        "total_pnl_usd": -0.229933,
+        "profit_factor": 0.494868,
+        "total_pnl_usd": -0.313626,
         "trades": 5,
-        "win_rate": 0.6,
-        "wins": 3
+        "win_rate": 0.4,
+        "wins": 2
       },
       "BUY_YES": {
         "avg_pnl_usd": -0.892857,
@@ -403,23 +403,23 @@
     },
     "by_entry_horizon": {
       "12-24h": {
-        "avg_pnl_usd": -0.388736,
-        "avg_return_pct": -0.077747,
-        "flat": 0,
-        "losses": 1,
-        "profit_factor": 0.129231,
-        "total_pnl_usd": -0.777472,
-        "trades": 2,
-        "win_rate": 0.5,
-        "wins": 1
-      },
-      "24h+": {
-        "avg_pnl_usd": -0.086329,
-        "avg_return_pct": -0.017266,
+        "avg_pnl_usd": -0.542582,
+        "avg_return_pct": -0.108517,
         "flat": 0,
         "losses": 2,
-        "profit_factor": 0.306688,
-        "total_pnl_usd": -0.345318,
+        "profit_factor": 0.0,
+        "total_pnl_usd": -1.085165,
+        "trades": 2,
+        "win_rate": 0.0,
+        "wins": 0
+      },
+      "24h+": {
+        "avg_pnl_usd": -0.030329,
+        "avg_return_pct": -0.006066,
+        "flat": 1,
+        "losses": 1,
+        "profit_factor": 0.716924,
+        "total_pnl_usd": -0.121318,
         "trades": 4,
         "win_rate": 0.5,
         "wins": 2
@@ -433,7 +433,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.14,
       "event_slug": "",
-      "hours_to_target_now": -29.834316,
+      "hours_to_target_now": -30.337188,
       "mark_position_price": 0.115,
       "mark_quote_time_utc": "2026-02-23T15:34:33.606858+00:00",
       "mark_yes_mid": 0.115,
@@ -450,7 +450,7 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.83,
       "event_slug": "highest-temperature-in-nyc-on-february-25-2026",
-      "hours_to_target_now": -2.834316,
+      "hours_to_target_now": -3.337188,
       "market_id": "1427448",
       "signal_time_utc": "2026-02-24T16:50:44.773420+00:00",
       "size_usd": 5.0,
@@ -462,16 +462,16 @@
       "entry_horizon_bucket": "24h+",
       "entry_price": 0.6699999999999999,
       "event_slug": "highest-temperature-in-dallas-on-february-26-2026",
-      "hours_to_target_now": 21.165684,
-      "mark_position_price": 0.68,
-      "mark_quote_time_utc": "2026-02-25T14:19:37.947001+00:00",
-      "mark_yes_mid": 0.32,
+      "hours_to_target_now": 20.662812,
+      "mark_position_price": 0.685,
+      "mark_quote_time_utc": "2026-02-25T15:06:26.618812+00:00",
+      "mark_yes_mid": 0.315,
       "market_id": "1425373",
       "signal_time_utc": "2026-02-25T00:16:37.938532+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-26T12:00:00+00:00",
-      "unrealized_pnl_usd": 0.074627,
-      "unrealized_return_pct": 0.014925
+      "unrealized_pnl_usd": 0.11194,
+      "unrealized_return_pct": 0.022388
     },
     {
       "city": "NYC",
@@ -479,16 +479,16 @@
       "entry_horizon_bucket": "24h+",
       "entry_price": 0.74,
       "event_slug": "highest-temperature-in-nyc-on-february-26-2026",
-      "hours_to_target_now": 21.165684,
-      "mark_position_price": 0.735,
-      "mark_quote_time_utc": "2026-02-25T14:41:44.530173+00:00",
-      "mark_yes_mid": 0.265,
+      "hours_to_target_now": 20.662812,
+      "mark_position_price": 0.74,
+      "mark_quote_time_utc": "2026-02-25T15:10:38.194600+00:00",
+      "mark_yes_mid": 0.26,
       "market_id": "1425362",
       "signal_time_utc": "2026-02-25T00:46:42.507118+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-26T12:00:00+00:00",
-      "unrealized_pnl_usd": -0.033784,
-      "unrealized_return_pct": -0.006757
+      "unrealized_pnl_usd": 0.0,
+      "unrealized_return_pct": 0.0
     },
     {
       "city": "Atlanta",
@@ -496,16 +496,16 @@
       "entry_horizon_bucket": "24h+",
       "entry_price": 0.64,
       "event_slug": "highest-temperature-in-atlanta-on-february-26-2026",
-      "hours_to_target_now": 21.165684,
-      "mark_position_price": 0.65,
-      "mark_quote_time_utc": "2026-02-25T14:42:30.286598+00:00",
-      "mark_yes_mid": 0.35,
+      "hours_to_target_now": 20.662812,
+      "mark_position_price": 0.665,
+      "mark_quote_time_utc": "2026-02-25T15:04:56.160361+00:00",
+      "mark_yes_mid": 0.335,
       "market_id": "1425379",
       "signal_time_utc": "2026-02-25T00:51:43.791273+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-26T12:00:00+00:00",
-      "unrealized_pnl_usd": 0.078125,
-      "unrealized_return_pct": 0.015625
+      "unrealized_pnl_usd": 0.195313,
+      "unrealized_return_pct": 0.039063
     },
     {
       "city": "NYC",
@@ -513,16 +513,16 @@
       "entry_horizon_bucket": "24h+",
       "entry_price": 0.7,
       "event_slug": "highest-temperature-in-nyc-on-february-26-2026",
-      "hours_to_target_now": 21.165684,
-      "mark_position_price": 0.635,
-      "mark_quote_time_utc": "2026-02-25T14:41:12.122157+00:00",
-      "mark_yes_mid": 0.365,
+      "hours_to_target_now": 20.662812,
+      "mark_position_price": 0.64,
+      "mark_quote_time_utc": "2026-02-25T15:10:54.561538+00:00",
+      "mark_yes_mid": 0.36,
       "market_id": "1425361",
       "signal_time_utc": "2026-02-25T11:13:43.903233+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-26T12:00:00+00:00",
-      "unrealized_pnl_usd": -0.464286,
-      "unrealized_return_pct": -0.092857
+      "unrealized_pnl_usd": -0.428571,
+      "unrealized_return_pct": -0.085714
     },
     {
       "city": "Atlanta",
@@ -530,16 +530,16 @@
       "entry_horizon_bucket": "12-24h",
       "entry_price": 0.65,
       "event_slug": "highest-temperature-in-atlanta-on-february-26-2026",
-      "hours_to_target_now": 21.165684,
-      "mark_position_price": 0.665,
-      "mark_quote_time_utc": "2026-02-25T14:41:30.018669+00:00",
-      "mark_yes_mid": 0.335,
+      "hours_to_target_now": 20.662812,
+      "mark_position_price": 0.625,
+      "mark_quote_time_utc": "2026-02-25T15:04:53.291786+00:00",
+      "mark_yes_mid": 0.375,
       "market_id": "1425380",
       "signal_time_utc": "2026-02-25T12:18:59.456444+00:00",
       "size_usd": 5.0,
       "target_time_utc": "2026-02-26T12:00:00+00:00",
-      "unrealized_pnl_usd": 0.115385,
-      "unrealized_return_pct": 0.023077
+      "unrealized_pnl_usd": -0.192308,
+      "unrealized_return_pct": -0.038462
     }
   ],
   "open_summary": {
@@ -547,9 +547,9 @@
     "marked_open_positions": 6,
     "open_positions": 7,
     "realized_pnl_from_state_usd": -10.470321,
-    "total_pnl_including_open_usd": -11.593111,
+    "total_pnl_including_open_usd": -11.676805,
     "unmarked_open_positions": 1,
-    "unrealized_pnl_usd": -1.12279
+    "unrealized_pnl_usd": -1.206483
   },
   "state_path": "data/sample/paper_settlement_state.json",
   "tuning_candidates": {
