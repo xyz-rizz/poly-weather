@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-25T16:51:06.892858+00:00",
+  "as_of_utc": "2026-02-25T17:22:06.272194+00:00",
   "closed_market_ids": [
     "1407218",
     "1407238",
@@ -56,7 +56,7 @@
       "market_id": "1425373",
       "original_size_usd": 5.0,
       "partial_tp_taken": false,
-      "peak_mark_return_pct": 0.1865671641791045,
+      "peak_mark_return_pct": 0.19402985074626886,
       "signal_time_utc": "2026-02-25T00:16:37.938532+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
@@ -98,7 +98,7 @@
       "market_id": "1425361",
       "original_size_usd": 5.0,
       "partial_tp_taken": false,
-      "peak_mark_return_pct": -0.007142857142856991,
+      "peak_mark_return_pct": 0.0,
       "signal_time_utc": "2026-02-25T11:13:43.903233+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
@@ -112,7 +112,7 @@
       "market_id": "1425380",
       "original_size_usd": 5.0,
       "partial_tp_taken": false,
-      "peak_mark_return_pct": 0.2,
+      "peak_mark_return_pct": 0.22307692307692292,
       "signal_time_utc": "2026-02-25T12:18:59.456444+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
