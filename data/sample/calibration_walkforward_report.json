@@ -1,105 +1,105 @@
 {
   "aggregate": {
     "calibrated": {
-      "brier": 0.098377,
-      "ece": 0.042111,
-      "log_loss": 0.352474
+      "brier": 0.101642,
+      "ece": 0.030349,
+      "log_loss": 0.359664
     },
     "delta": {
-      "brier": -0.051007,
-      "ece": -0.099128,
-      "log_loss": -0.148327
+      "brier": -0.037815,
+      "ece": -0.094633,
+      "log_loss": -0.119367
     },
     "folds_with_improved_brier": 3,
     "raw": {
-      "brier": 0.149385,
-      "ece": 0.141239,
-      "log_loss": 0.500801
+      "brier": 0.139458,
+      "ece": 0.124982,
+      "log_loss": 0.479031
     }
   },
   "folds": [
     {
       "calibrated": {
-        "brier": 0.098692,
-        "ece": 0.045881,
-        "log_loss": 0.355537,
-        "n": 988
+        "brier": 0.101873,
+        "ece": 0.034645,
+        "log_loss": 0.36194,
+        "n": 1405
       },
       "delta": {
-        "brier": -0.092832,
-        "ece": -0.162452,
-        "log_loss": -0.285674
+        "brier": -0.067813,
+        "ece": -0.142776,
+        "log_loss": -0.22056
       },
       "fold": 2,
-      "profile_bins": 36,
-      "profile_hit_rate_test": 0.997976,
+      "profile_bins": 38,
+      "profile_hit_rate_test": 0.998577,
       "raw": {
-        "brier": 0.191524,
-        "ece": 0.208333,
-        "log_loss": 0.641211,
-        "n": 988
+        "brier": 0.169686,
+        "ece": 0.177421,
+        "log_loss": 0.5825,
+        "n": 1405
       },
       "test_end_utc": "2026-02-24T02:02:51.985972+00:00",
-      "test_rows": 988,
+      "test_rows": 1405,
       "test_start_utc": "2026-02-23T21:42:43.184152+00:00",
-      "train_end_utc": "2026-02-23T21:42:43.184152+00:00",
-      "train_rows": 988,
+      "train_end_utc": "2026-02-23T21:37:43.074474+00:00",
+      "train_rows": 1405,
       "train_start_utc": "2026-02-23T12:46:49.377308+00:00"
     },
     {
       "calibrated": {
-        "brier": 0.09554,
-        "ece": 0.045434,
-        "log_loss": 0.347707,
-        "n": 988
+        "brier": 0.100142,
+        "ece": 0.030506,
+        "log_loss": 0.357519,
+        "n": 1405
       },
       "delta": {
-        "brier": -0.046299,
-        "ece": -0.090064,
-        "log_loss": -0.122541
+        "brier": -0.034884,
+        "ece": -0.092665,
+        "log_loss": -0.104061
       },
       "fold": 3,
-      "profile_bins": 48,
+      "profile_bins": 51,
       "profile_hit_rate_test": 1.0,
       "raw": {
-        "brier": 0.141839,
-        "ece": 0.135498,
-        "log_loss": 0.470248,
-        "n": 988
+        "brier": 0.135026,
+        "ece": 0.123171,
+        "log_loss": 0.46158,
+        "n": 1405
       },
       "test_end_utc": "2026-02-24T07:44:22.697958+00:00",
-      "test_rows": 988,
+      "test_rows": 1405,
       "test_start_utc": "2026-02-24T02:02:51.985972+00:00",
       "train_end_utc": "2026-02-24T02:02:51.985972+00:00",
-      "train_rows": 1976,
+      "train_rows": 2810,
       "train_start_utc": "2026-02-23T12:46:49.377308+00:00"
     },
     {
       "calibrated": {
-        "brier": 0.1009,
-        "ece": 0.035018,
-        "log_loss": 0.354178,
-        "n": 991
+        "brier": 0.102912,
+        "ece": 0.025895,
+        "log_loss": 0.359533,
+        "n": 1406
       },
       "delta": {
-        "brier": -0.013891,
-        "ece": -0.044867,
-        "log_loss": -0.036765
+        "brier": -0.010749,
+        "ece": -0.048458,
+        "log_loss": -0.03348
       },
       "fold": 4,
-      "profile_bins": 67,
-      "profile_hit_rate_test": 0.939455,
+      "profile_bins": 71,
+      "profile_hit_rate_test": 0.957326,
       "raw": {
-        "brier": 0.114791,
-        "ece": 0.079885,
-        "log_loss": 0.390943,
-        "n": 991
+        "brier": 0.113661,
+        "ece": 0.074353,
+        "log_loss": 0.393013,
+        "n": 1406
       },
       "test_end_utc": "2026-02-24T11:55:55.524183+00:00",
-      "test_rows": 991,
+      "test_rows": 1406,
       "test_start_utc": "2026-02-24T07:44:22.697958+00:00",
       "train_end_utc": "2026-02-24T07:44:22.697958+00:00",
-      "train_rows": 2964,
+      "train_rows": 4215,
       "train_start_utc": "2026-02-23T12:46:49.377308+00:00"
     }
   ],
@@ -109,8 +109,8 @@
     "min_bin_samples": 8,
     "min_train_rows": 100,
     "restrict_status": null,
-    "rows_labeled": 3955,
-    "rows_total": 20913,
+    "rows_labeled": 5621,
+    "rows_total": 21453,
     "shrinkage_n": 25
   }
 }

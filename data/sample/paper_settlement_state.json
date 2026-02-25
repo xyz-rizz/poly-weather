@@ -1,5 +1,5 @@
 {
-  "as_of_utc": "2026-02-25T09:42:50.719887+00:00",
+  "as_of_utc": "2026-02-25T10:13:49.934441+00:00",
   "closed_market_ids": [
     "1407218",
     "1407238",
@@ -8,6 +8,7 @@
     "1413701",
     "1413702",
     "1413703",
+    "1413708",
     "1413709",
     "1413715",
     "1413721",
@@ -32,20 +33,6 @@
       "size_usd": 5.0,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-24T09:00:00+00:00"
-    },
-    {
-      "city": "Dallas",
-      "direction": "BUY_NO",
-      "entry_price": 0.5700000000000001,
-      "event_slug": "highest-temperature-in-dallas-on-february-24-2026",
-      "market_id": "1413708",
-      "original_size_usd": 5.0,
-      "partial_tp_taken": false,
-      "peak_mark_return_pct": 0.1666666666666666,
-      "signal_time_utc": "2026-02-24T06:52:03.837206+00:00",
-      "size_usd": 5.0,
-      "source_event_type": "signal",
-      "target_time_utc": "2026-02-24T12:00:00+00:00"
     },
     {
       "city": "NYC",
@@ -97,13 +84,13 @@
       "market_id": "1425379",
       "original_size_usd": 5.0,
       "partial_tp_taken": false,
-      "peak_mark_return_pct": 0.007812500000000007,
+      "peak_mark_return_pct": 0.10156249999999992,
       "signal_time_utc": "2026-02-25T00:51:43.791273+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-26T12:00:00+00:00"
     }
   ],
-  "realized_pnl_usd": -14.242251117737414,
-  "settled_trades": 4
+  "realized_pnl_usd": -10.470321293176012,
+  "settled_trades": 5
 }
