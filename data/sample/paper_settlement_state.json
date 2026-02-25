@@ -1,10 +1,11 @@
 {
-  "as_of_utc": "2026-02-25T08:40:38.429419+00:00",
+  "as_of_utc": "2026-02-25T09:12:08.192416+00:00",
   "closed_market_ids": [
     "1407218",
     "1407238",
     "1407239",
     "1413700",
+    "1413701",
     "1413702",
     "1413703",
     "1413709",
@@ -42,20 +43,6 @@
       "partial_tp_taken": false,
       "peak_mark_return_pct": 0.1666666666666666,
       "signal_time_utc": "2026-02-24T06:52:03.837206+00:00",
-      "size_usd": 5.0,
-      "source_event_type": "signal",
-      "target_time_utc": "2026-02-24T12:00:00+00:00"
-    },
-    {
-      "city": "NYC",
-      "direction": "BUY_NO",
-      "entry_price": 0.41000000000000003,
-      "event_slug": "highest-temperature-in-nyc-on-february-24-2026",
-      "market_id": "1413701",
-      "original_size_usd": 5.0,
-      "partial_tp_taken": false,
-      "peak_mark_return_pct": -0.03658536585365857,
-      "signal_time_utc": "2026-02-24T11:55:56.735546+00:00",
       "size_usd": 5.0,
       "source_event_type": "signal",
       "target_time_utc": "2026-02-24T12:00:00+00:00"
@@ -117,6 +104,6 @@
       "target_time_utc": "2026-02-26T12:00:00+00:00"
     }
   ],
-  "realized_pnl_usd": -9.242251117737414,
-  "settled_trades": 3
+  "realized_pnl_usd": -14.242251117737414,
+  "settled_trades": 4
 }
