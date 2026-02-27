@@ -53,6 +53,16 @@ def _env_float(name: str, default: float) -> float:
         return default
 
 
+def _env_csv_list(name: str) -> list[str] | None:
+    raw = os.getenv(name)
+    if raw is None:
+        return None
+    values = [v.strip() for v in raw.split(",") if v.strip()]
+    if not values:
+        return None
+    return values
+
+
 def _build_pipeline(cfg: ScanConfig) -> WeatherScanPipeline:
     mode = os.getenv("WEATHER_BOT_MODE", "mock").lower().strip()
     market_source = MockMarketSource()
@@ -128,14 +138,19 @@ def _build_pipeline(cfg: ScanConfig) -> WeatherScanPipeline:
 
 def main() -> int:
     base_cfg = ScanConfig()
+    city_override = _env_csv_list("WEATHER_BOT_CITIES")
     cfg = replace(
         base_cfg,
+        cities=city_override if city_override else base_cfg.cities,
         allow_buy_yes=_env_bool("WEATHER_BOT_ALLOW_BUY_YES", base_cfg.allow_buy_yes),
         allow_buy_no=_env_bool("WEATHER_BOT_ALLOW_BUY_NO", base_cfg.allow_buy_no),
         min_yes_price_for_buy_yes=_env_float("WEATHER_BOT_MIN_YES_PRICE_FOR_BUY_YES", base_cfg.min_yes_price_for_buy_yes),
+        min_no_price_for_buy_no=_env_float("WEATHER_BOT_MIN_NO_PRICE_FOR_BUY_NO", base_cfg.min_no_price_for_buy_no),
         max_no_price_for_buy_no=_env_float("WEATHER_BOT_MAX_NO_PRICE_FOR_BUY_NO", base_cfg.max_no_price_for_buy_no),
         min_edge_buy_yes=_env_float("WEATHER_BOT_MIN_EDGE_BUY_YES", base_cfg.min_edge_buy_yes),
         min_edge_buy_no=_env_float("WEATHER_BOT_MIN_EDGE_BUY_NO", base_cfg.min_edge_buy_no),
+        min_hours_to_target=_env_float("WEATHER_BOT_MIN_HOURS_TO_TARGET", base_cfg.min_hours_to_target),
+        max_hours_to_target=_env_float("WEATHER_BOT_MAX_HOURS_TO_TARGET", base_cfg.max_hours_to_target),
     )
     mode = os.getenv("WEATHER_BOT_MODE", "mock").lower().strip()
     pipeline = _build_pipeline(cfg)

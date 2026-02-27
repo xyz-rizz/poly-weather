@@ -69,6 +69,37 @@ class WeatherScanPipeline:
                     )
                 )
                 continue
+            hours_to_target = (market.target_time_utc - now_utc).total_seconds() / 3600.0
+            if hours_to_target < self.config.min_hours_to_target:
+                reason = f"too close to target ({hours_to_target:.2f}h < {self.config.min_hours_to_target:.2f}h)"
+                skipped.append(f"{market.market_id}: {reason}")
+                evaluations.append(
+                    MarketEvaluation(
+                        market=market,
+                        forecasts=[],
+                        observation=None,
+                        quote=None,
+                        opportunity=None,
+                        status="skipped",
+                        reason=reason,
+                    )
+                )
+                continue
+            if hours_to_target > self.config.max_hours_to_target:
+                reason = f"too far from target ({hours_to_target:.2f}h > {self.config.max_hours_to_target:.2f}h)"
+                skipped.append(f"{market.market_id}: {reason}")
+                evaluations.append(
+                    MarketEvaluation(
+                        market=market,
+                        forecasts=[],
+                        observation=None,
+                        quote=None,
+                        opportunity=None,
+                        status="skipped",
+                        reason=reason,
+                    )
+                )
+                continue
             forecast_key = (market.city, market.station_id, market.target_time_utc)
             if forecast_key not in forecast_cache:
                 forecast_cache[forecast_key] = self._collect_forecasts(market.city, market.station_id, market.target_time_utc)
@@ -393,6 +424,8 @@ class WeatherScanPipeline:
             if abs(opp.edge) < self.config.min_edge_buy_no:
                 return False
             no_entry = max(0.0, min(1.0, opp.quote.no_ask))
+            if no_entry < self.config.min_no_price_for_buy_no:
+                return False
             if no_entry > self.config.max_no_price_for_buy_no:
                 return False
         return True
@@ -412,6 +445,8 @@ class WeatherScanPipeline:
             if abs(opp.edge) < self.config.min_edge_buy_no:
                 return f"BUY_NO edge {abs(opp.edge):.3f} below directional threshold"
             no_entry = max(0.0, min(1.0, opp.quote.no_ask))
+            if no_entry < self.config.min_no_price_for_buy_no:
+                return f"BUY_NO ask {no_entry:.3f} below min price filter"
             if no_entry > self.config.max_no_price_for_buy_no:
                 return f"BUY_NO ask {no_entry:.3f} above max price filter"
         return "directional filter rejected"

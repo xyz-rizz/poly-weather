@@ -25,7 +25,10 @@ class ScanConfig:
     allow_buy_yes: bool = True
     allow_buy_no: bool = True
     min_yes_price_for_buy_yes: float = 0.08
+    min_no_price_for_buy_no: float = 0.08
     max_no_price_for_buy_no: float = 0.92
+    min_hours_to_target: float = 0.0
+    max_hours_to_target: float = 72.0
     take_profit_pct: float = 0.35
     stop_loss_pct: float = 0.20
     max_forecast_age_minutes: float = 180.0

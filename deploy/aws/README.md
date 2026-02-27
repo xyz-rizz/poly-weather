@@ -101,7 +101,10 @@ Calibration/benchmark integrity guards (recommended defaults in `.env.weather-bo
 Win-rate preservation filters (recommended while clean labeled data is rebuilding):
 - `WEATHER_BOT_MIN_EDGE_BUY_YES=0.12` (stricter than `BUY_NO`)
 - `WEATHER_BOT_MIN_YES_PRICE_FOR_BUY_YES=0.08` (avoid cheap YES tails that were frequent losers)
+- `WEATHER_BOT_MIN_NO_PRICE_FOR_BUY_NO=0.08` (avoid dust NO entries that often fail to reprice)
 - `WEATHER_BOT_MAX_NO_PRICE_FOR_BUY_NO=0.92` (avoid near-$1 NO entries with poor payoff asymmetry)
+- `WEATHER_BOT_MIN_HOURS_TO_TARGET` / `WEATHER_BOT_MAX_HOURS_TO_TARGET` (restrict horizon where your model is most stable)
+- `WEATHER_BOT_CITIES` (comma-separated city allowlist for focused canary runs)
 - optional: `WEATHER_BOT_ALLOW_BUY_YES=0` for a temporary `BUY_NO`-only canary profile
 
 Paper mark-exit tuning (optional in `.env.weather-bot`):
