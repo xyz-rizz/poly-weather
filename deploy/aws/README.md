@@ -105,6 +105,7 @@ Win-rate preservation filters (recommended while clean labeled data is rebuildin
 - `WEATHER_BOT_MAX_NO_PRICE_FOR_BUY_NO=0.92` (avoid near-$1 NO entries with poor payoff asymmetry)
 - `WEATHER_BOT_MIN_HOURS_TO_TARGET` / `WEATHER_BOT_MAX_HOURS_TO_TARGET` (restrict horizon where your model is most stable)
 - `WEATHER_BOT_CITIES` (comma-separated city allowlist for focused canary runs)
+- `WEATHER_BOT_MAX_OPPORTUNITIES_PER_EVENT=1` and `WEATHER_BOT_MAX_POSITIONS_PER_EVENT=1` (reduce same-event concentration)
 - optional: `WEATHER_BOT_ALLOW_BUY_YES=0` for a temporary `BUY_NO`-only canary profile
 
 Paper mark-exit tuning (optional in `.env.weather-bot`):

@@ -53,6 +53,16 @@ def _env_float(name: str, default: float) -> float:
         return default
 
 
+def _env_int(name: str, default: int) -> int:
+    raw = os.getenv(name)
+    if raw is None or not raw.strip():
+        return default
+    try:
+        return int(raw)
+    except ValueError:
+        return default
+
+
 def _env_csv_list(name: str) -> list[str] | None:
     raw = os.getenv(name)
     if raw is None:
@@ -151,6 +161,10 @@ def main() -> int:
         min_edge_buy_no=_env_float("WEATHER_BOT_MIN_EDGE_BUY_NO", base_cfg.min_edge_buy_no),
         min_hours_to_target=_env_float("WEATHER_BOT_MIN_HOURS_TO_TARGET", base_cfg.min_hours_to_target),
         max_hours_to_target=_env_float("WEATHER_BOT_MAX_HOURS_TO_TARGET", base_cfg.max_hours_to_target),
+        max_opportunities_per_event=_env_int(
+            "WEATHER_BOT_MAX_OPPORTUNITIES_PER_EVENT", base_cfg.max_opportunities_per_event
+        ),
+        max_positions_per_event=_env_int("WEATHER_BOT_MAX_POSITIONS_PER_EVENT", base_cfg.max_positions_per_event),
     )
     mode = os.getenv("WEATHER_BOT_MODE", "mock").lower().strip()
     pipeline = _build_pipeline(cfg)
